@@ -1,0 +1,2163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LLD Mentor Guide — Sai Kumar</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0a;
+  --surface: #111111;
+  --surface2: #171717;
+  --surface3: #1e1e1e;
+  --border: #222222;
+  --border2: #2a2a2a;
+  --mentor: #f97316;
+  --mentor-dim: rgba(249,115,22,0.12);
+  --mentor-border: rgba(249,115,22,0.25);
+  --you: #38bdf8;
+  --you-dim: rgba(56,189,248,0.1);
+  --you-border: rgba(56,189,248,0.25);
+  --success: #4ade80;
+  --success-dim: rgba(74,222,128,0.1);
+  --warn: #facc15;
+  --warn-dim: rgba(250,204,21,0.1);
+  --text: #e5e5e5;
+  --text2: #a3a3a3;
+  --text3: #525252;
+  --code-bg: #0d1117;
+  --mono: 'JetBrains Mono', monospace;
+  --serif: 'Instrument Serif', serif;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 13.5px;
+  line-height: 1.75;
+  overflow-x: hidden;
+}
+
+/* ── scrollbar ── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px 60px;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
+}
+.hero::before {
+  content:'';
+  position:absolute;
+  top:-200px; right:-200px;
+  width:700px; height:700px;
+  background: radial-gradient(circle, rgba(249,115,22,0.06) 0%, transparent 65%);
+  pointer-events:none;
+}
+.hero::after {
+  content:'';
+  position:absolute;
+  bottom:-200px; left:-100px;
+  width:500px; height:500px;
+  background: radial-gradient(circle, rgba(56,189,248,0.04) 0%, transparent 65%);
+  pointer-events:none;
+}
+.hero-tag {
+  display:inline-flex; align-items:center; gap:8px;
+  font-size:11px; letter-spacing:2px; text-transform:uppercase;
+  color: var(--mentor);
+  margin-bottom: 32px;
+}
+.hero-tag::before {
+  content:'';
+  width:24px; height:1px;
+  background: var(--mentor);
+}
+.hero-title {
+  font-family: var(--serif);
+  font-size: clamp(48px, 8vw, 96px);
+  line-height: 1.0;
+  letter-spacing: -2px;
+  margin-bottom: 24px;
+}
+.hero-title .orange { color: var(--mentor); font-style: italic; }
+.hero-title .blue { color: var(--you); }
+.hero-sub {
+  font-size: 14px;
+  color: var(--text2);
+  max-width: 580px;
+  margin-bottom: 56px;
+  line-height: 1.8;
+}
+.hero-meta {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+.hero-meta-item { }
+.hero-meta-item .label { font-size:10px; letter-spacing:2px; text-transform:uppercase; color: var(--text3); display:block; }
+.hero-meta-item .val { font-size:18px; color: var(--text); font-family: var(--serif); }
+
+/* ── PROGRESS BAR (top) ── */
+.reading-bar {
+  position:fixed; top:0; left:0; height:2px;
+  background: linear-gradient(to right, var(--mentor), var(--you));
+  z-index:999; width:0%;
+  transition: width 0.1s;
+}
+
+/* ── NAV SIDEBAR ── */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+.sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  border-right: 1px solid var(--border);
+  background: var(--surface);
+  padding: 28px 0;
+  scrollbar-width: none;
+}
+.sidebar::-webkit-scrollbar { display: none; }
+.sidebar-label {
+  font-size: 9px; letter-spacing:3px; text-transform:uppercase;
+  color: var(--text3); padding: 0 24px; margin-bottom:16px;
+}
+.nav-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 24px;
+  cursor: pointer;
+  transition: all 0.15s;
+  border-left: 2px solid transparent;
+  text-decoration: none;
+  color: var(--text2);
+}
+.nav-item:hover { background: var(--surface2); color: var(--text); }
+.nav-item.active { border-left-color: var(--mentor); background: var(--mentor-dim); color: var(--mentor); }
+.nav-num { font-size:10px; color: var(--text3); min-width:20px; padding-top:1px; }
+.nav-item.active .nav-num { color: var(--mentor); }
+.nav-text { font-size:12px; line-height:1.4; }
+.nav-sub { font-size:10px; color: var(--text3); margin-top:1px; }
+
+.main-content { flex: 1; min-width: 0; }
+
+/* ── SECTION ── */
+.section {
+  padding: 80px 60px;
+  border-bottom: 1px solid var(--border);
+  max-width: 860px;
+}
+
+.section-eyebrow {
+  font-size:10px; letter-spacing:3px; text-transform:uppercase;
+  color: var(--mentor); margin-bottom:12px;
+  display:flex; align-items:center; gap:10px;
+}
+.section-eyebrow::after { content:''; flex:1; max-width:60px; height:1px; background:var(--mentor-border); }
+.section-title {
+  font-family: var(--serif);
+  font-size: clamp(28px, 4vw, 44px);
+  line-height: 1.1;
+  margin-bottom: 12px;
+  letter-spacing: -1px;
+}
+.section-lead {
+  color: var(--text2);
+  font-size: 13px;
+  max-width: 640px;
+  margin-bottom: 48px;
+  line-height: 1.8;
+  border-left: 2px solid var(--border2);
+  padding-left: 16px;
+}
+
+/* ── MENTOR VOICE ── */
+.mentor-says {
+  background: var(--mentor-dim);
+  border: 1px solid var(--mentor-border);
+  border-left: 3px solid var(--mentor);
+  border-radius: 0 8px 8px 0;
+  padding: 20px 24px;
+  margin: 28px 0;
+  position: relative;
+}
+.mentor-says::before {
+  content: 'MENTOR';
+  position:absolute;
+  top:-10px; left:16px;
+  font-size:9px; letter-spacing:3px; text-transform:uppercase;
+  background: var(--mentor);
+  color: #000;
+  padding: 2px 8px;
+  font-weight: 700;
+}
+.mentor-says p { color: #fed7aa; font-size:13px; line-height:1.85; }
+.mentor-says p + p { margin-top:10px; }
+.mentor-says strong { color: var(--mentor); }
+
+.you-do {
+  background: var(--you-dim);
+  border: 1px solid var(--you-border);
+  border-left: 3px solid var(--you);
+  border-radius: 0 8px 8px 0;
+  padding: 20px 24px;
+  margin: 28px 0;
+  position: relative;
+}
+.you-do::before {
+  content: 'YOUR TASK';
+  position:absolute;
+  top:-10px; left:16px;
+  font-size:9px; letter-spacing:3px; text-transform:uppercase;
+  background: var(--you);
+  color: #000;
+  padding: 2px 8px;
+  font-weight: 700;
+}
+.you-do p { color: #bae6fd; font-size:13px; line-height:1.85; }
+.you-do ul { color: #bae6fd; font-size:13px; line-height:1.85; padding-left:20px; margin-top:6px; }
+.you-do li { margin-bottom:4px; }
+
+.warning-box {
+  background: var(--warn-dim);
+  border: 1px solid rgba(250,204,21,0.2);
+  border-left: 3px solid var(--warn);
+  border-radius: 0 8px 8px 0;
+  padding: 16px 20px;
+  margin: 20px 0;
+}
+.warning-box p { color: #fef08a; font-size:12.5px; line-height:1.75; }
+.warning-box strong { color: var(--warn); }
+
+.success-box {
+  background: var(--success-dim);
+  border: 1px solid rgba(74,222,128,0.2);
+  border-left: 3px solid var(--success);
+  border-radius: 0 8px 8px 0;
+  padding: 16px 20px;
+  margin: 20px 0;
+}
+.success-box p { color: #bbf7d0; font-size:12.5px; line-height:1.75; }
+.success-box strong { color: var(--success); }
+
+/* ── STEP BLOCKS ── */
+.steps { display:flex; flex-direction:column; gap:0; }
+.step {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-bottom: none;
+  transition: background 0.2s;
+}
+.step:first-child { border-radius: 8px 8px 0 0; }
+.step:last-child { border-bottom: 1px solid var(--border); border-radius: 0 0 8px 8px; }
+.step:hover { background: var(--surface2); }
+.step-num {
+  display: flex; align-items:flex-start; justify-content:center;
+  padding-top: 20px;
+  font-family: var(--serif);
+  font-size: 22px;
+  color: var(--text3);
+  border-right: 1px solid var(--border);
+}
+.step-body { padding: 18px 22px; }
+.step-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+.step-desc { font-size: 12.5px; color: var(--text2); line-height: 1.75; }
+.step-time {
+  display:inline-block; margin-top:8px;
+  font-size:10px; letter-spacing:1px; text-transform:uppercase;
+  color: var(--mentor);
+  border: 1px solid var(--mentor-border);
+  padding: 2px 8px; border-radius: 4px;
+}
+
+/* ── CODE BLOCKS ── */
+.code-wrap { margin: 24px 0; }
+.code-label {
+  display:flex; justify-content:space-between; align-items:center;
+  background: var(--surface3); border: 1px solid var(--border);
+  border-bottom: none; padding: 8px 16px;
+  border-radius: 6px 6px 0 0;
+  font-size:11px; color: var(--text3);
+}
+.code-label span { color: var(--success); }
+pre.code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 0 0 6px 6px;
+  padding: 20px 22px;
+  overflow-x: auto;
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.8;
+  color: #c9d1d9;
+}
+.kw { color: #ff79c6; }
+.cls { color: #8be9fd; }
+.iface { color: #50fa7b; }
+.cm { color: #6272a4; font-style:italic; }
+.str { color: #f1fa8c; }
+.prop { color: #bd93f9; }
+.num { color: #ffb86c; }
+.op { color: #ff79c6; }
+
+/* ── CONCEPT TABLE ── */
+.concept-table { width:100%; border-collapse:collapse; margin: 20px 0; }
+.concept-table th {
+  background: var(--surface2);
+  color: var(--text2);
+  font-size: 10px; letter-spacing:2px; text-transform:uppercase;
+  padding: 10px 14px;
+  text-align:left;
+  border: 1px solid var(--border);
+}
+.concept-table td {
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  font-size: 12.5px;
+  vertical-align:top;
+  line-height: 1.65;
+}
+.concept-table tr:nth-child(even) td { background: var(--surface); }
+.concept-table tr:hover td { background: var(--surface2); }
+
+/* ── QUIZ CARDS ── */
+.quiz-card {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 14px;
+  overflow: hidden;
+}
+.quiz-q {
+  padding: 16px 20px;
+  background: var(--surface2);
+  cursor: pointer;
+  display: flex; justify-content:space-between; align-items:center;
+  transition: background 0.15s;
+  font-size:13px;
+}
+.quiz-q:hover { background: var(--surface3); }
+.quiz-q .arrow { color: var(--text3); font-size:10px; transition: transform 0.2s; }
+.quiz-q.open .arrow { transform: rotate(180deg); }
+.quiz-a {
+  display:none;
+  padding: 16px 20px;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text2);
+  font-size: 12.5px;
+  line-height: 1.8;
+}
+.quiz-a strong { color: var(--success); }
+
+/* ── PATTERN GRID ── */
+.pattern-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+  margin: 20px 0;
+}
+.pattern-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 18px;
+  transition: all 0.2s;
+  cursor: default;
+}
+.pattern-card:hover { border-color: var(--mentor-border); background: var(--surface2); transform: translateY(-2px); }
+.pc-category {
+  font-size:9px; letter-spacing:2px; text-transform:uppercase;
+  margin-bottom:6px;
+}
+.cat-cr { color: var(--mentor); }
+.cat-st { color: var(--you); }
+.cat-bh { color: var(--success); }
+.pc-name { font-family:var(--serif); font-size:18px; margin-bottom:6px; }
+.pc-when { font-size:11.5px; color: var(--text2); line-height:1.6; margin-bottom:10px; }
+.pc-signal {
+  font-size:10px; color: var(--warn);
+  border: 1px solid rgba(250,204,21,0.2);
+  padding: 4px 8px; border-radius:4px;
+  display:inline-block;
+}
+
+/* ── PROBLEM CARD ── */
+.problem-card {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 16px;
+  overflow:hidden;
+}
+.problem-header {
+  padding: 16px 20px;
+  background: var(--surface2);
+  display:flex; justify-content:space-between; align-items:center;
+  flex-wrap:wrap; gap:10px;
+}
+.problem-title { font-family:var(--serif); font-size:18px; }
+.problem-badges { display:flex; gap:6px; flex-wrap:wrap; }
+.badge {
+  font-size:9px; letter-spacing:1px; text-transform:uppercase;
+  padding:3px 8px; border-radius:20px;
+}
+.badge-easy { background:rgba(74,222,128,0.15); color:var(--success); border:1px solid rgba(74,222,128,0.3); }
+.badge-med { background:rgba(250,204,21,0.12); color:var(--warn); border:1px solid rgba(250,204,21,0.25); }
+.badge-hard { background:rgba(249,115,22,0.12); color:var(--mentor); border:1px solid rgba(249,115,22,0.25); }
+.badge-must { background:rgba(239,68,68,0.15); color:#f87171; border:1px solid rgba(239,68,68,0.3); }
+.problem-body { padding:18px 20px; }
+.problem-section-title { font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--text3); margin-bottom:8px; margin-top:14px; }
+.problem-section-title:first-child { margin-top:0; }
+.problem-body p { font-size:12.5px; color:var(--text2); line-height:1.75; }
+.problem-body ul { font-size:12.5px; color:var(--text2); line-height:1.75; padding-left:18px; }
+.problem-body li { margin-bottom:4px; }
+
+/* ── WEEKLY CALENDAR ── */
+.week-plan { margin: 20px 0; }
+.week-phase {
+  margin-bottom:32px;
+}
+.week-phase-title {
+  font-size:11px; letter-spacing:2px; text-transform:uppercase;
+  color: var(--mentor); border-bottom:1px solid var(--border);
+  padding-bottom:8px; margin-bottom:16px;
+}
+.week-row {
+  display:grid;
+  grid-template-columns: 100px repeat(7, 1fr);
+  gap:0;
+  border: 1px solid var(--border);
+  border-bottom:none;
+}
+.week-row:last-child { border-bottom:1px solid var(--border); border-radius:0 0 6px 6px; }
+.week-row:first-of-type { border-radius:6px 6px 0 0; }
+.week-cell {
+  padding:10px 10px;
+  border-right:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  font-size:11px;
+  vertical-align:top;
+  line-height:1.5;
+}
+.week-cell:last-child { border-right:none; }
+.week-cell.header { background:var(--surface2); color:var(--text3); font-size:9px; letter-spacing:2px; text-transform:uppercase; text-align:center; padding:8px 4px; }
+.week-cell.label { background:var(--surface); color:var(--text2); font-size:10px; letter-spacing:1px; text-transform:uppercase; font-weight:700; display:flex; align-items:center; }
+.wc-study { background:rgba(249,115,22,0.06); color:#fed7aa; }
+.wc-code { background:rgba(56,189,248,0.06); color:#bae6fd; }
+.wc-review { background:rgba(74,222,128,0.06); color:#bbf7d0; }
+.wc-rest { background:var(--bg); color:var(--text3); font-style:italic; }
+.wc-mock { background:rgba(168,85,247,0.08); color:#d8b4fe; }
+
+/* ── CHECKLIST ── */
+.check-list { list-style:none; }
+.check-item {
+  display:flex; gap:12px; align-items:flex-start;
+  padding:12px 0;
+  border-bottom:1px solid var(--border);
+  cursor:pointer;
+  transition: background 0.15s;
+  padding-left:8px;
+  margin-left:-8px;
+  border-radius:4px;
+}
+.check-item:hover { background:var(--surface); }
+.check-box-new {
+  width:18px; height:18px; flex-shrink:0;
+  border:1.5px solid var(--border2);
+  border-radius:4px; margin-top:1px;
+  display:flex; align-items:center; justify-content:center;
+  transition:all 0.15s;
+}
+.check-box-new.done { background:var(--success); border-color:var(--success); }
+.check-box-new.done::after { content:'✓'; color:#000; font-size:11px; font-weight:700; }
+.check-text-new { font-size:13px; color:var(--text2); line-height:1.6; }
+.check-text-new.done { text-decoration:line-through; color:var(--text3); }
+
+/* ── PROGRESS ── */
+.progress-widget {
+  position:fixed;
+  bottom:28px; right:28px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:16px 20px;
+  min-width:200px;
+  z-index:500;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+.pw-label { font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--text3); margin-bottom:8px; }
+.pw-pct { font-family:var(--serif); font-size:28px; color:var(--success); line-height:1; }
+.pw-track { height:4px; background:var(--border); border-radius:2px; margin-top:8px; overflow:hidden; }
+.pw-fill { height:100%; background:linear-gradient(to right, var(--mentor), var(--success)); border-radius:2px; transition:width 0.4s; width:0%; }
+.pw-sub { font-size:10px; color:var(--text3); margin-top:6px; }
+
+/* ── TIPS ── */
+.tip-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:12px; margin:20px 0; }
+.tip-card {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:18px;
+}
+.tip-card .tip-n { font-family:var(--serif); font-size:36px; color:var(--border2); line-height:1; margin-bottom:6px; }
+.tip-card .tip-title { font-size:13px; font-weight:700; color:var(--text); margin-bottom:6px; }
+.tip-card .tip-body { font-size:12px; color:var(--text2); line-height:1.7; }
+
+/* ── ANIM ── */
+@keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+.section { animation: fadeUp 0.4s ease both; }
+
+/* ── RESPONSIVE ── */
+@media (max-width:900px) {
+  .sidebar { display:none; }
+  .hero { padding:60px 24px; }
+  .section { padding:56px 24px; }
+  .week-row { grid-template-columns:80px repeat(7,1fr); }
+}
+</style>
+</head>
+<body>
+
+<div class="reading-bar" id="readingBar"></div>
+
+<!-- HERO -->
+<div class="hero" id="top">
+  <div class="hero-tag">Your Personal LLD Mentor · Complete Guide</div>
+  <div class="hero-title">
+    I'll guide you<br>
+    <span class="orange">step by step</span><br>
+    to <span class="blue">LLD mastery</span>
+  </div>
+  <p class="hero-sub">
+    This is not a reference doc. This is a mentorship. I'll tell you exactly what to do, when to do it, how to practice it, what mistakes to avoid, and how to know when you're ready to move on. Follow this and you will be interview-ready in 16 weeks.
+  </p>
+  <div class="hero-meta">
+    <div class="hero-meta-item"><span class="label">Your Stack</span><span class="val">C# / .NET Core</span></div>
+    <div class="hero-meta-item"><span class="label">Duration</span><span class="val">16 Weeks</span></div>
+    <div class="hero-meta-item"><span class="label">Daily Time</span><span class="val">90 min/day</span></div>
+    <div class="hero-meta-item"><span class="label">Target</span><span class="val">FAANG LLD</span></div>
+  </div>
+</div>
+
+<!-- ── AUTH PANEL ─────────────────────────────── -->
+<style>
+#auth-panel {
+  position: fixed; inset: 0; z-index: 2000;
+  background: rgba(0,0,0,0.88);
+  backdrop-filter: blur(10px);
+  display: flex; align-items: center; justify-content: center;
+}
+.auth-box {
+  background: #111111; border: 1px solid #2a2a2a;
+  border-radius: 16px; padding: 44px 48px; width: 100%; max-width: 420px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.auth-logo { font-family: 'Instrument Serif', serif; font-size: 28px; margin-bottom: 6px; }
+.auth-logo span { color: #f97316; font-style: italic; }
+.auth-sub { font-size: 11px; color: #525252; margin-bottom: 36px; letter-spacing: 1px; }
+.auth-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #525252; margin-bottom: 6px; display: block; }
+.auth-input {
+  width: 100%; background: #0a0a0a; border: 1px solid #2a2a2a;
+  border-radius: 8px; padding: 12px 14px; color: #e5e5e5;
+  font-family: 'JetBrains Mono', monospace; font-size: 13px;
+  margin-bottom: 16px; outline: none; transition: border-color 0.2s;
+}
+.auth-input:focus { border-color: #f97316; }
+.auth-btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
+.auth-btn {
+  padding: 12px; border-radius: 8px; border: none; cursor: pointer;
+  font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  font-weight: 700; letter-spacing: 1px; transition: all 0.2s;
+}
+.auth-btn-primary { background: #f97316; color: #000; }
+.auth-btn-primary:hover { background: #fb923c; }
+.auth-btn-secondary { background: #1e1e1e; color: #a3a3a3; border: 1px solid #2a2a2a; }
+.auth-btn-secondary:hover { background: #2a2a2a; color: #e5e5e5; }
+#auth-error { font-size: 11px; color: #f87171; margin-top: 12px; min-height: 16px; }
+.auth-note { font-size: 10px; color: #525252; margin-top: 20px; line-height: 1.6; border-top: 1px solid #1e1e1e; padding-top: 16px; }
+.auth-note a { color: #f97316; text-decoration: none; }
+
+#auth-status-bar {
+  position: fixed; top: 2px; right: 0; z-index: 1000;
+  display: none; align-items: center; gap: 14px;
+  background: #111; border-left: 1px solid #222; border-bottom: 1px solid #222;
+  padding: 6px 16px; border-radius: 0 0 0 8px;
+  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+}
+#user-email-display { color: #a3a3a3; }
+#sync-status { color: #4ade80; transition: opacity 0.5s; opacity: 0; letter-spacing: 1px; }
+.signout-btn {
+  background: none; border: 1px solid #2a2a2a; border-radius: 4px;
+  color: #525252; font-size: 10px; padding: 3px 8px; cursor: pointer;
+  font-family: 'JetBrains Mono', monospace; transition: all 0.15s;
+}
+.signout-btn:hover { border-color: #f87171; color: #f87171; }
+</style>
+
+<!-- Auth Modal -->
+<div id="auth-panel">
+  <div class="auth-box">
+    <div class="auth-logo">LLD <span>Mentor</span></div>
+    <div class="auth-sub">SIGN IN TO SYNC YOUR PROGRESS ACROSS ALL DEVICES</div>
+    <label class="auth-label" for="auth-email">Email</label>
+    <input class="auth-input" id="auth-email" type="email" placeholder="sai@example.com" autocomplete="email">
+    <label class="auth-label" for="auth-pass">Password</label>
+    <input class="auth-input" id="auth-pass" type="password" placeholder="Min 6 characters" autocomplete="current-password"
+      onkeydown="if(event.key==='Enter') doSignIn()">
+    <div class="auth-btn-row">
+      <button class="auth-btn auth-btn-primary" onclick="doSignIn()">SIGN IN</button>
+      <button class="auth-btn auth-btn-secondary" onclick="doSignUp()">CREATE ACCOUNT</button>
+    </div>
+    <div id="auth-error"></div>
+    <div class="auth-note">
+      Your checklist progress is saved to Firebase and syncs across every device you sign in on — laptop, phone, office PC.<br><br>
+      <strong>First time?</strong> Enter any email + password and click <strong>Create Account</strong>.<br>
+      Already have an account? Click <strong>Sign In</strong>.<br><br>
+      You need to set up your own free Firebase project and paste the config into the HTML. See the
+      <a href="#setup-guide" onclick="document.getElementById('auth-panel').style.display='none'">setup guide below ↓</a>
+      or <a href="https://console.firebase.google.com" target="_blank">open Firebase Console →</a>
+    </div>
+  </div>
+</div>
+
+<!-- Status Bar (shown when signed in) -->
+<div id="auth-status-bar">
+  <span style="color:#525252;font-size:9px;letter-spacing:2px;text-transform:uppercase;">Signed in as</span>
+  <span id="user-email-display"></span>
+  <span id="sync-status"></span>
+  <button class="signout-btn" onclick="doSignOut()">Sign Out</button>
+</div>
+
+<!-- ── FIREBASE SETUP GUIDE (inline, collapsible) ── -->
+<div id="setup-guide" style="background:#0d1117;border-bottom:1px solid #1e1e2e;padding:32px 48px;font-family:'JetBrains Mono',monospace;font-size:12px;max-width:860px;">
+  <div style="font-family:'Instrument Serif',serif;font-size:22px;color:#f97316;margin-bottom:20px;">🔧 Firebase Setup Guide — 5 Minutes</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px;">
+
+    <div style="background:#111;border:1px solid #222;border-radius:8px;padding:20px;">
+      <div style="font-size:9px;letter-spacing:3px;color:#f97316;margin-bottom:8px;">STEP 1</div>
+      <div style="color:#e5e5e5;font-weight:700;margin-bottom:8px;">Create Firebase Project</div>
+      <div style="color:#a3a3a3;line-height:1.75;font-size:11px;">
+        1. Go to <a href="https://console.firebase.google.com" target="_blank" style="color:#f97316;">console.firebase.google.com</a><br>
+        2. Click <strong style="color:#e5e5e5;">Add Project</strong><br>
+        3. Name it <code style="color:#4ade80;">lld-mentor-sai</code><br>
+        4. Disable Google Analytics (not needed)<br>
+        5. Click <strong style="color:#e5e5e5;">Create Project</strong>
+      </div>
+    </div>
+
+    <div style="background:#111;border:1px solid #222;border-radius:8px;padding:20px;">
+      <div style="font-size:9px;letter-spacing:3px;color:#f97316;margin-bottom:8px;">STEP 2</div>
+      <div style="color:#e5e5e5;font-weight:700;margin-bottom:8px;">Enable Authentication</div>
+      <div style="color:#a3a3a3;line-height:1.75;font-size:11px;">
+        1. In your project → click <strong style="color:#e5e5e5;">Build → Authentication</strong><br>
+        2. Click <strong style="color:#e5e5e5;">Get Started</strong><br>
+        3. Enable <strong style="color:#e5e5e5;">Email/Password</strong> provider<br>
+        4. Click <strong style="color:#e5e5e5;">Save</strong>
+      </div>
+    </div>
+
+    <div style="background:#111;border:1px solid #222;border-radius:8px;padding:20px;">
+      <div style="font-size:9px;letter-spacing:3px;color:#f97316;margin-bottom:8px;">STEP 3</div>
+      <div style="color:#e5e5e5;font-weight:700;margin-bottom:8px;">Enable Realtime Database</div>
+      <div style="color:#a3a3a3;line-height:1.75;font-size:11px;">
+        1. Click <strong style="color:#e5e5e5;">Build → Realtime Database</strong><br>
+        2. Click <strong style="color:#e5e5e5;">Create Database</strong><br>
+        3. Choose any region (e.g. asia-southeast1)<br>
+        4. Select <strong style="color:#e5e5e5;">Start in test mode</strong> → Enable<br>
+        5. Copy the database URL (looks like: <code style="color:#4ade80;">https://xxx.firebaseio.com</code>)
+      </div>
+    </div>
+
+    <div style="background:#111;border:1px solid #222;border-radius:8px;padding:20px;">
+      <div style="font-size:9px;letter-spacing:3px;color:#f97316;margin-bottom:8px;">STEP 4</div>
+      <div style="color:#e5e5e5;font-weight:700;margin-bottom:8px;">Get Your Config & Paste It</div>
+      <div style="color:#a3a3a3;line-height:1.75;font-size:11px;">
+        1. Click ⚙️ <strong style="color:#e5e5e5;">Project Settings</strong><br>
+        2. Scroll to <strong style="color:#e5e5e5;">Your Apps → Web App</strong><br>
+        3. Click <strong style="color:#e5e5e5;">Add App</strong> → Web icon (&lt;/&gt;)<br>
+        4. Copy the <code style="color:#4ade80;">firebaseConfig</code> object<br>
+        5. Open this HTML file in a text editor<br>
+        6. Find <code style="color:#facc15;">PASTE_YOUR_apiKey_HERE</code> and replace all 7 values
+      </div>
+    </div>
+
+    <div style="background:#111;border:1px solid #222;border-radius:8px;padding:20px;">
+      <div style="font-size:9px;letter-spacing:3px;color:#f97316;margin-bottom:8px;">STEP 5</div>
+      <div style="color:#e5e5e5;font-weight:700;margin-bottom:8px;">Set Database Security Rules</div>
+      <div style="color:#a3a3a3;line-height:1.75;font-size:11px;">
+        In Realtime Database → Rules tab, paste:<br>
+        <pre style="background:#0a0a0a;padding:10px;border-radius:4px;margin-top:8px;color:#4ade80;font-size:10px;">{
+  "rules": {
+    "users": {
+      "$uid": {
+        ".read":  "$uid === auth.uid",
+        ".write": "$uid === auth.uid"
+      }
+    }
+  }
+}</pre>
+        Click <strong style="color:#e5e5e5;">Publish</strong>. This ensures only you can read your own data.
+      </div>
+    </div>
+
+    <div style="background:#111;border:1px solid #222;border-radius:8px;padding:20px;">
+      <div style="font-size:9px;letter-spacing:3px;color:#f97316;margin-bottom:8px;">DONE ✓</div>
+      <div style="color:#e5e5e5;font-weight:700;margin-bottom:8px;">You're All Set</div>
+      <div style="color:#a3a3a3;line-height:1.75;font-size:11px;">
+        Open the HTML file → Create Account with your email → Start checking items.<br><br>
+        Open the same file on your phone or office PC → Sign In → All your checks are there instantly.<br><br>
+        <strong style="color:#4ade80;">Free tier:</strong> 1GB storage, 10GB/month transfer — more than enough for a checklist forever.<br><br>
+        Push the HTML to GitHub Pages so you don't need to carry the file around.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="layout">
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-label">Navigation</div>
+  <a class="nav-item active" href="#intro" onclick="setActive(this)">
+    <span class="nav-num">00</span>
+    <div><div class="nav-text">Before You Begin</div><div class="nav-sub">Mindset & setup</div></div>
+  </a>
+  <a class="nav-item" href="#oop" onclick="setActive(this)">
+    <span class="nav-num">01</span>
+    <div><div class="nav-text">OOP Foundations</div><div class="nav-sub">Weeks 1–3</div></div>
+  </a>
+  <a class="nav-item" href="#solid" onclick="setActive(this)">
+    <span class="nav-num">02</span>
+    <div><div class="nav-text">SOLID Principles</div><div class="nav-sub">Weeks 4–5</div></div>
+  </a>
+  <a class="nav-item" href="#patterns" onclick="setActive(this)">
+    <span class="nav-num">03</span>
+    <div><div class="nav-text">Design Patterns</div><div class="nav-sub">Weeks 6–10</div></div>
+  </a>
+  <a class="nav-item" href="#practice" onclick="setActive(this)">
+    <span class="nav-num">04</span>
+    <div><div class="nav-text">LLD Problems</div><div class="nav-sub">Weeks 11–14</div></div>
+  </a>
+  <a class="nav-item" href="#interview" onclick="setActive(this)">
+    <span class="nav-num">05</span>
+    <div><div class="nav-text">Interview Mastery</div><div class="nav-sub">Weeks 15–16</div></div>
+  </a>
+  <a class="nav-item" href="#weekly" onclick="setActive(this)">
+    <span class="nav-num">06</span>
+    <div><div class="nav-text">Weekly Schedule</div><div class="nav-sub">Full 16-week plan</div></div>
+  </a>
+  <a class="nav-item" href="#mistakes" onclick="setActive(this)">
+    <span class="nav-num">07</span>
+    <div><div class="nav-text">Common Mistakes</div><div class="nav-sub">What to avoid</div></div>
+  </a>
+  <a class="nav-item" href="#checklist" onclick="setActive(this)">
+    <span class="nav-num">08</span>
+    <div><div class="nav-text">Master Checklist</div><div class="nav-sub">Track progress</div></div>
+  </a>
+</aside>
+
+<main class="main-content">
+
+<!-- ══════ SECTION 00: BEFORE YOU BEGIN ══════ -->
+<section class="section" id="intro">
+  <div class="section-eyebrow">Before You Start</div>
+  <div class="section-title">The Mentor's Opening Words</div>
+  <div class="section-lead">Read this first. Skipping this section is like starting a marathon without stretching. These 5 things will determine whether you succeed in the next 16 weeks.</div>
+
+  <div class="mentor-says">
+    <p>Sai, I'm going to be straight with you from the start. LLD is one of those skills that feels impossible at first — you look at a "Design a Parking Lot" problem and your mind goes blank. That's completely normal. It's not about intelligence, it's about not yet having the mental framework to approach design problems. That's what we're building over the next 16 weeks.</p>
+    <p>Here's what I've seen kill most engineers' LLD prep: they read about patterns, they nod along thinking "yes, I understand this", and then they can't design a single system when faced with a blank screen. <strong>Understanding ≠ ability.</strong> You build LLD ability by doing, not reading. For every hour you spend reading in this guide, you need to spend 2 hours writing actual C# code.</p>
+    <p>I'm going to hold you to that. Every section ends with a concrete task. Don't move to the next section until that task is done. Not 80% done. Done.</p>
+  </div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="step-title">Set Up Your Practice Environment</div>
+        <div class="step-desc">Create a new .NET solution called <code>LLDMastery</code> with separate projects for each phase: <code>LLDMastery.OOP</code>, <code>LLDMastery.SOLID</code>, <code>LLDMastery.Patterns</code>, <code>LLDMastery.Problems</code>. Add xUnit for unit tests. This is your workshop for 16 weeks. Every concept you learn goes here as working code — not notes, not diagrams. Working. Code.</div>
+        <div class="step-time">Do this today — 30 min</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="step-title">Understand How LLD Interviews Actually Work</div>
+        <div class="step-desc">In a 45-minute LLD round, you're not expected to build a complete system. You're expected to show your thinking process: how you break down requirements, what classes you identify, what relationships you define, and what patterns you apply. The interviewer is evaluating your design instincts, not your typing speed. This means you must practice talking while designing — not just coding silently.</div>
+        <div class="step-time">Mental preparation</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="step-title">Commit to Retrieval Practice, Not Passive Reading</div>
+        <div class="step-desc">After reading any concept in this guide, close the guide and write the C# implementation from memory. If you can't, that means you didn't learn it — you just read it. This feeling of struggle is where learning actually happens. Don't skip the discomfort. Every concept needs to come out of your fingertips without looking it up before you can say you know it.</div>
+        <div class="step-time">Learning strategy — apply always</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <div class="step-title">Keep a Design Journal</div>
+        <div class="step-desc">A simple text file or Notion page. After every practice problem or pattern implementation, write 3 sentences: (1) What design decision did I make? (2) Why did I make it? (3) What would change if the requirements were different? This forces you to articulate your thinking — which is exactly what you need to do in an interview. Engineers who do this get dramatically better faster.</div>
+        <div class="step-time">Ongoing habit</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <div class="step-title">Define "Done" for Each Phase</div>
+        <div class="step-desc">You move to the next phase only when: you can implement the concepts from memory without looking, you can explain WHY you're making each design choice, and you can critique a flawed design and explain what's wrong with it. Time estimates are guides, not deadlines. If Week 2 concepts aren't solid by Week 2 — stay there. A shaky foundation breaks everything above it.</div>
+        <div class="step-time">Your promotion criteria</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="warning-box" style="margin-top:32px;">
+    <p><strong>The #1 mistake I see:</strong> Engineers rush to Phase 4 (problems) without solid OOP and SOLID foundations. Then they can't figure out why their designs feel messy or why they can't apply patterns naturally. If your OOP fundamentals are shaky, everything downstream is shaky. Do not rush Phase 1.</p>
+  </div>
+</section>
+
+<!-- ══════ SECTION 01: OOP ══════ -->
+<section class="section" id="oop">
+  <div class="section-eyebrow">Phase 01 · Weeks 1–3</div>
+  <div class="section-title">OOP Foundations — The Right Way</div>
+  <div class="section-lead">Most engineers with 4+ years think they know OOP. They know the definitions. That's different from knowing how to use OOP to make design decisions. This phase fixes that gap.</div>
+
+  <div class="mentor-says">
+    <p>Here's the honest truth about OOP at your level: you probably know what encapsulation is. But can you look at a class and immediately identify what it's doing wrong with encapsulation? Can you refactor it? That's the gap we're closing. In an LLD interview, you won't be asked "what is polymorphism?" You'll be asked to design a payment system, and you'll need to use polymorphism without being told to.</p>
+    <p><strong>Week 1 is entirely Encapsulation + Abstraction. Week 2 is Inheritance + the misuse of it. Week 3 is Polymorphism + Composition vs Inheritance.</strong> Follow this order exactly — each one builds on the previous.</p>
+  </div>
+
+  <div class="section-eyebrow" style="margin-top:40px;">Week 1 · Days 1–7</div>
+  <h3 style="font-family:var(--serif);font-size:24px;margin-bottom:12px;">Encapsulation & Abstraction</h3>
+
+  <div class="mentor-says">
+    <p>Start with encapsulation because it's the principle you'll violate most often without realising it. The sign of weak encapsulation is: public fields, setters on everything, and classes that let any caller change any state. When you see that, you should feel discomfort. That discomfort is your design instinct developing.</p>
+    <p>For abstraction: the key insight is that interfaces don't exist to make code "more complex" — they exist to let you swap implementations. If you can only ever have one implementation, you don't need an interface. If you'll have multiple, or if you want to test it, you need one. <strong>Every time you write an interface, ask yourself: will this ever have more than one implementation?</strong></p>
+  </div>
+
+  <div class="you-do">
+    <p><strong>Day 1–2 Task:</strong> Encapsulation drill</p>
+    <ul>
+      <li>Write a <code>BankAccount</code> class with broken encapsulation (public fields, no validation)</li>
+      <li>Write 3 tests that show how the broken version can be corrupted</li>
+      <li>Refactor it to have proper encapsulation — private fields, validated methods only</li>
+      <li>Write the same 3 tests — they should now fail to compile or pass safely</li>
+      <li>Write in your design journal: what did encapsulation protect here?</li>
+    </ul>
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-label">C# · Encapsulation — Bad vs Good <span>Week 1 Reference</span></div>
+    <pre class="code"><span class="cm">// ❌ BAD — Broken encapsulation</span>
+<span class="kw">public class</span> <span class="cls">BankAccount</span> {
+    <span class="kw">public</span> <span class="prop">decimal</span> Balance;          <span class="cm">// anyone can corrupt this</span>
+    <span class="kw">public</span> <span class="prop">string</span> OwnerName;          <span class="cm">// no validation</span>
+    <span class="kw">public</span> <span class="prop">bool</span> IsActive;
+}
+<span class="cm">// Caller can do: account.Balance = -99999; — disaster!</span>
+
+<span class="cm">// ✅ GOOD — Properly encapsulated</span>
+<span class="kw">public class</span> <span class="cls">BankAccount</span> {
+    <span class="kw">private</span> <span class="prop">decimal</span> _balance;
+    <span class="kw">private</span> <span class="prop">bool</span> _isActive = <span class="kw">true</span>;
+
+    <span class="kw">public</span> <span class="prop">decimal</span> Balance => _balance;     <span class="cm">// read-only outside</span>
+    <span class="kw">public</span> <span class="prop">string</span> OwnerName { <span class="kw">get</span>; }       <span class="cm">// set only via constructor</span>
+
+    <span class="kw">public</span> <span class="cls">BankAccount</span>(<span class="prop">string</span> owner, <span class="prop">decimal</span> initialDeposit) {
+        <span class="kw">if</span> (<span class="prop">string</span>.IsNullOrWhiteSpace(owner)) <span class="kw">throw new</span> <span class="cls">ArgumentException</span>(<span class="str">"Owner required"</span>);
+        <span class="kw">if</span> (initialDeposit < <span class="num">0</span>) <span class="kw">throw new</span> <span class="cls">ArgumentException</span>(<span class="str">"Deposit must be positive"</span>);
+        OwnerName = owner;
+        _balance = initialDeposit;
+    }
+
+    <span class="kw">public void</span> Deposit(<span class="prop">decimal</span> amount) {
+        EnsureActive();
+        <span class="kw">if</span> (amount <= <span class="num">0</span>) <span class="kw">throw new</span> <span class="cls">ArgumentException</span>(<span class="str">"Must be positive"</span>);
+        _balance += amount;
+    }
+
+    <span class="kw">public void</span> Withdraw(<span class="prop">decimal</span> amount) {
+        EnsureActive();
+        <span class="kw">if</span> (amount > _balance) <span class="kw">throw new</span> <span class="cls">InvalidOperationException</span>(<span class="str">"Insufficient funds"</span>);
+        _balance -= amount;
+    }
+
+    <span class="kw">private void</span> EnsureActive() {
+        <span class="kw">if</span> (!_isActive) <span class="kw">throw new</span> <span class="cls">InvalidOperationException</span>(<span class="str">"Account is closed"</span>);
+    }
+}
+<span class="cm">// Key: state can only change through validated methods. Invariants are protected.</span></pre>
+  </div>
+
+  <div class="you-do">
+    <p><strong>Day 3–4 Task:</strong> Abstraction drill</p>
+    <ul>
+      <li>Design an <code>IPaymentProcessor</code> interface — list only what callers need to know</li>
+      <li>Build 3 implementations: <code>CreditCardProcessor</code>, <code>UpiProcessor</code>, <code>NetBankingProcessor</code></li>
+      <li>Write a <code>CheckoutService</code> that depends ONLY on <code>IPaymentProcessor</code> — never the concrete types</li>
+      <li>Write a unit test that uses a mock <code>IPaymentProcessor</code> — this tests that your abstraction is correct</li>
+      <li>Ask yourself: if I add a 4th payment method, does anything in CheckoutService change? Answer should be NO</li>
+    </ul>
+  </div>
+
+  <div class="section-eyebrow" style="margin-top:40px;">Week 2 · Days 8–14</div>
+  <h3 style="font-family:var(--serif);font-size:24px;margin-bottom:12px;">Inheritance — Use & Misuse</h3>
+
+  <div class="mentor-says">
+    <p>Inheritance is the most misused OOP concept. Most code I review has inheritance chains that should be composition instead. The rule is simple: only inherit when you genuinely mean "B IS A type of A". Not "B uses A". Not "B is sort of like A". IS A.</p>
+    <p>A <code>Dog</code> IS AN <code>Animal</code> — correct. A <code>UserRepository</code> IS NOT A <code>Database</code> — that's using a database, not being one. If you catch yourself inheriting to reuse code rather than to model a genuine type relationship, stop. Use composition.</p>
+    <p><strong>This week you'll intentionally write bad inheritance, then fix it. That contrast is where the learning lives.</strong></p>
+  </div>
+
+  <div class="you-do">
+    <p><strong>Day 8–10 Task:</strong> Inheritance done right</p>
+    <ul>
+      <li>Create an abstract <code>Shape</code> class with abstract <code>Area()</code> and <code>Perimeter()</code> methods</li>
+      <li>Implement <code>Circle</code>, <code>Rectangle</code>, <code>Triangle</code> — each overrides both methods</li>
+      <li>Write a method <code>PrintShapeInfo(Shape s)</code> that works with any shape — this demonstrates polymorphism via inheritance</li>
+      <li>Now add a <code>ColoredShape</code> — should it inherit Shape or contain one? Think carefully before coding</li>
+      <li>Answer: Contain one. ColoredShape HAS-A Shape. It's NOT A Shape that just happens to have color.</li>
+    </ul>
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-label">C# · Inheritance vs Composition — Critical Choice <span>Week 2 Reference</span></div>
+    <pre class="code"><span class="cm">// ✅ Correct inheritance — genuine is-a relationship</span>
+<span class="kw">public abstract class</span> <span class="cls">Animal</span> {
+    <span class="kw">public</span> <span class="prop">string</span> Name { <span class="kw">get</span>; }
+    <span class="kw">protected</span> <span class="cls">Animal</span>(<span class="prop">string</span> name) => Name = name;
+    <span class="kw">public abstract void</span> MakeSound();
+    <span class="kw">public virtual void</span> Move() => Console.WriteLine(<span class="str">$"{Name} moves"</span>);
+}
+<span class="kw">public class</span> <span class="cls">Dog</span> : <span class="cls">Animal</span> {        <span class="cm">// Dog IS AN Animal ✓</span>
+    <span class="kw">public</span> <span class="cls">Dog</span>(<span class="prop">string</span> name) : <span class="kw">base</span>(name) {}
+    <span class="kw">public override void</span> MakeSound() => Console.WriteLine(<span class="str">"Woof!"</span>);
+}
+
+<span class="cm">// ❌ Wrong — inheriting to reuse code, not model hierarchy</span>
+<span class="kw">public class</span> <span class="cls">Stack</span>&lt;T&gt; : List&lt;T&gt; {   <span class="cm">// Stack IS NOT A List!</span>
+    <span class="kw">public void</span> Push(T item) => Add(item);
+    <span class="kw">public</span> T Pop() { var t = this[Count-<span class="num">1</span>]; RemoveAt(Count-<span class="num">1</span>); <span class="kw">return</span> t; }
+    <span class="cm">// Problem: exposes Insert, RemoveAt, etc — Stack shouldn't allow these!</span>
+}
+
+<span class="cm">// ✅ Fixed — composition. Stack USES a list, it's not a list</span>
+<span class="kw">public class</span> <span class="cls">Stack</span>&lt;T&gt; {
+    <span class="kw">private readonly</span> List&lt;T&gt; _items = <span class="kw">new</span>();
+    <span class="kw">public void</span> Push(T item) => _items.Add(item);
+    <span class="kw">public</span> T Pop() {
+        <span class="kw">if</span> (_items.Count == <span class="num">0</span>) <span class="kw">throw new</span> <span class="cls">InvalidOperationException</span>(<span class="str">"Empty stack"</span>);
+        var top = _items[^<span class="num">1</span>];
+        _items.RemoveAt(_items.Count - <span class="num">1</span>);
+        <span class="kw">return</span> top;
+    }
+    <span class="kw">public</span> T Peek() => _items.Count > <span class="num">0</span> ? _items[^<span class="num">1</span>] : <span class="kw">throw new</span> <span class="cls">InvalidOperationException</span>();
+    <span class="kw">public</span> <span class="prop">int</span> Count => _items.Count;
+    <span class="cm">// Clean interface. No leaked List methods.</span>
+}</pre>
+  </div>
+
+  <div class="section-eyebrow" style="margin-top:40px;">Week 3 · Days 15–21</div>
+  <h3 style="font-family:var(--serif);font-size:24px;margin-bottom:12px;">Polymorphism — The Heart of LLD</h3>
+
+  <div class="mentor-says">
+    <p>Polymorphism is what makes design patterns possible. Without it, every pattern collapses into a mess of if-else chains. The critical skill here isn't writing polymorphic code — you already do that. The skill is <strong>recognising when an if-else chain should be replaced with polymorphism</strong>. That recognition is what separates average engineers from strong LLD designers.</p>
+    <p>There's a rule I call the "type switch smell": if you ever see <code>if (type == "X") ... else if (type == "Y")</code> or <code>switch(someEnum)</code> in business logic, that's almost always a polymorphism opportunity. Your job this week is to find those in your own Ascendion code and fix them.</p>
+  </div>
+
+  <div class="you-do">
+    <p><strong>Day 15–17 Task:</strong> Replace conditionals with polymorphism</p>
+    <ul>
+      <li>Write this broken code first: a <code>TaxCalculator</code> with a big switch statement on country code</li>
+      <li>Identify the polymorphism opportunity: each country's tax logic = a separate class</li>
+      <li>Refactor: <code>ITaxStrategy</code> interface, <code>IndianTax</code>, <code>USTax</code>, <code>UKTax</code> implementations</li>
+      <li>Now adding a new country means ZERO changes to existing code — only adding a new class</li>
+      <li>This pattern appears constantly in LLD interviews. Master this refactoring cold.</li>
+    </ul>
+  </div>
+
+  <div class="you-do" style="margin-top:16px;">
+    <p><strong>Day 18–21 Task:</strong> OOP capstone mini-project</p>
+    <ul>
+      <li>Build a simple <code>NotificationSystem</code> from scratch — no googling</li>
+      <li>It must support Email, SMS, Push channels</li>
+      <li>Adding a new channel should require zero changes to existing classes</li>
+      <li>Each notification has content, recipient, priority level</li>
+      <li>Time yourself: first attempt may take 2–3 hours. That's fine.</li>
+      <li><strong>You're ready for Phase 2 when:</strong> you can rebuild this from scratch in 30 minutes</li>
+    </ul>
+  </div>
+
+  <div class="success-box">
+    <p><strong>Phase 1 exit criteria:</strong> Can you design a 3-class system using all four OOP pillars correctly, explain every design choice, and identify what's wrong with a poorly designed class — without referring to any notes? If yes, proceed to Phase 2.</p>
+  </div>
+</section>
+
+<!-- ══════ SECTION 02: SOLID ══════ -->
+<section class="section" id="solid">
+  <div class="section-eyebrow">Phase 02 · Weeks 4–5</div>
+  <div class="section-title">SOLID — Not a Checklist, a Design Language</div>
+  <div class="section-lead">SOLID is the vocabulary senior engineers use to evaluate and critique designs. Learning to spot violations is more valuable than memorising definitions. This phase teaches you to read code and immediately see SOLID issues.</div>
+
+  <div class="mentor-says">
+    <p>Here's how we're going to learn SOLID differently. For each principle, I'm going to show you a codebase that violates it. Your job is to first feel why it's bad — what problems does it cause? What breaks when requirements change? Then we fix it. The violation is the teacher, not the principle statement.</p>
+    <p><strong>Spend 2 days on each principle: Day 1 is the violation + analysis. Day 2 is the fix + tests.</strong> Ten days total for 5 principles. Don't compress this — each principle is a distinct mental model you need to own.</p>
+  </div>
+
+  <div class="section-eyebrow" style="margin-top:40px;">Principle 1 — SRP</div>
+  <h3 style="font-family:var(--serif);font-size:22px;margin-bottom:10px;">Single Responsibility Principle</h3>
+  <p style="color:var(--text2);font-size:13px;margin-bottom:20px;line-height:1.75;">"A class should have only one reason to change." — the most misunderstood line in software engineering. It doesn't mean one method. It means one actor — one stakeholder whose requirements drive change.</p>
+
+  <div class="mentor-says">
+    <p>The practical question to ask about every class: <strong>"If I need to change this class, what caused the change?"</strong> If the answer is "we changed the email template" OR "we changed the database schema" OR "we changed the business logic" — that class has multiple reasons to change. That's an SRP violation.</p>
+    <p>In your .NET world, the most common SRP violation is the fat service class: it does validation, business logic, database calls, and email sending all in one place. Sound familiar? Think about your Ascendion codebase right now.</p>
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-label">C# · SRP Violation → Fix <span>Week 4 Reference</span></div>
+    <pre class="code"><span class="cm">// ❌ VIOLATION — UserService has 4 reasons to change</span>
+<span class="kw">public class</span> <span class="cls">UserService</span> {
+    <span class="kw">private readonly</span> <span class="cls">SqlConnection</span> _conn;
+
+    <span class="kw">public</span> <span class="cls">User</span> GetUser(<span class="prop">int</span> id) {           <span class="cm">// DB reason</span>
+        <span class="kw">return</span> _conn.Query&lt;<span class="cls">User</span>&gt;(<span class="str">"SELECT * FROM Users WHERE Id=@id"</span>, <span class="kw">new</span> { id });
+    }
+    <span class="kw">public</span> <span class="prop">bool</span> ValidateUser(<span class="cls">User</span> u) {        <span class="cm">// Validation reason</span>
+        <span class="kw">return</span> !<span class="prop">string</span>.IsNullOrEmpty(u.Email) && u.Age >= <span class="num">18</span>;
+    }
+    <span class="kw">public void</span> SendWelcomeEmail(<span class="cls">User</span> u) {   <span class="cm">// Email reason</span>
+        <span class="kw">var</span> smtp = <span class="kw">new</span> <span class="cls">SmtpClient</span>();
+        smtp.Send(u.Email, <span class="str">"Welcome!"</span>, <span class="str">"Hello "</span> + u.Name);
+    }
+    <span class="kw">public</span> <span class="prop">string</span> FormatUserReport(<span class="cls">User</span> u) { <span class="cm">// Formatting reason</span>
+        <span class="kw">return</span> <span class="str">$"User: {u.Name}, Email: {u.Email}, Age: {u.Age}"</span>;
+    }
+}
+
+<span class="cm">// ✅ FIXED — Each class has one reason to change</span>
+<span class="kw">public class</span> <span class="cls">UserRepository</span> {              <span class="cm">// Only DB logic here</span>
+    <span class="kw">private readonly</span> <span class="iface">IDbConnection</span> _conn;
+    <span class="kw">public</span> <span class="cls">User</span> GetUser(<span class="prop">int</span> id) => _conn.QueryFirst&lt;<span class="cls">User</span>&gt;(<span class="str">"SELECT..."</span>, <span class="kw">new</span> { id });
+    <span class="kw">public void</span> Save(<span class="cls">User</span> u) { <span class="cm">/* ... */</span> }
+}
+
+<span class="kw">public class</span> <span class="cls">UserValidator</span> {               <span class="cm">// Only validation here</span>
+    <span class="kw">public</span> <span class="prop">bool</span> IsValid(<span class="cls">User</span> u) =>
+        !<span class="prop">string</span>.IsNullOrEmpty(u.Email) && u.Age >= <span class="num">18</span>;
+}
+
+<span class="kw">public class</span> <span class="cls">UserEmailService</span> {             <span class="cm">// Only email here</span>
+    <span class="kw">private readonly</span> <span class="iface">IEmailSender</span> _sender;
+    <span class="kw">public void</span> SendWelcome(<span class="cls">User</span> u) => _sender.Send(u.Email, <span class="str">"Welcome!"</span>, <span class="str">"..."</span>);
+}
+
+<span class="kw">public class</span> <span class="cls">UserReportFormatter</span> {          <span class="cm">// Only formatting here</span>
+    <span class="kw">public</span> <span class="prop">string</span> Format(<span class="cls">User</span> u) => <span class="str">$"User: {u.Name}, ..."</span>;
+}
+<span class="cm">// Now: change DB schema → touch only UserRepository. Change email template → touch only UserEmailService.</span></pre>
+  </div>
+
+  <div class="you-do">
+    <p><strong>SRP Task (2 days):</strong></p>
+    <ul>
+      <li>Find a class in your Ascendion project that violates SRP. If you can't find one, it means you're not looking closely enough — it's always there</li>
+      <li>List every "reason to change" that class has. Write them down</li>
+      <li>Refactor it: each reason becomes a separate class</li>
+      <li>Write unit tests for each new class — notice how much easier testing is now</li>
+      <li>Journal: "What would have broken if I needed to change the DB logic before this refactor?"</li>
+    </ul>
+  </div>
+
+  <div class="section-eyebrow" style="margin-top:36px;">Principle 2 — OCP</div>
+  <h3 style="font-family:var(--serif);font-size:22px;margin-bottom:10px;">Open/Closed Principle</h3>
+  <div class="mentor-says">
+    <p>OCP is about making your code resilient to new requirements. The telltale violation: <strong>every new feature requires you to modify an existing class</strong>. That's dangerous because you're touching tested, working code. OCP says: design so new features are added by adding new code, not modifying existing code.</p>
+    <p>The pattern that makes OCP work is almost always: replace the thing that varies (the if-else logic) with an interface, then put each variant in its own class. This is the Strategy pattern at its core — and it's why OCP and Strategy are inseparable.</p>
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-label">C# · OCP — Adding Features Without Modification <span>Week 4 Reference</span></div>
+    <pre class="code"><span class="cm">// ❌ VIOLATION — Every new report type requires modifying this class</span>
+<span class="kw">public class</span> <span class="cls">ReportGenerator</span> {
+    <span class="kw">public</span> <span class="prop">string</span> Generate(<span class="cls">Report</span> data, <span class="prop">string</span> format) {
+        <span class="kw">if</span> (format == <span class="str">"PDF"</span>) { <span class="kw">return</span> GeneratePdf(data); }
+        <span class="kw">else if</span> (format == <span class="str">"Excel"</span>) { <span class="kw">return</span> GenerateExcel(data); }
+        <span class="kw">else if</span> (format == <span class="str">"CSV"</span>) { <span class="kw">return</span> GenerateCsv(data); }
+        <span class="cm">// New format = modify this method = risk breaking existing formats!</span>
+        <span class="kw">throw new</span> <span class="cls">NotSupportedException</span>(format);
+    }
+}
+
+<span class="cm">// ✅ FIXED — New format = new class only, zero existing changes</span>
+<span class="kw">public interface</span> <span class="iface">IReportFormatter</span> {
+    <span class="prop">string</span> Format { <span class="kw">get</span>; }
+    <span class="prop">string</span> Generate(<span class="cls">Report</span> data);
+}
+
+<span class="kw">public class</span> <span class="cls">PdfReportFormatter</span> : <span class="iface">IReportFormatter</span> {
+    <span class="kw">public</span> <span class="prop">string</span> Format => <span class="str">"PDF"</span>;
+    <span class="kw">public</span> <span class="prop">string</span> Generate(<span class="cls">Report</span> data) { <span class="kw">return</span> <span class="str">"...pdf bytes..."</span>; }
+}
+<span class="kw">public class</span> <span class="cls">ExcelReportFormatter</span> : <span class="iface">IReportFormatter</span> {
+    <span class="kw">public</span> <span class="prop">string</span> Format => <span class="str">"Excel"</span>;
+    <span class="kw">public</span> <span class="prop">string</span> Generate(<span class="cls">Report</span> data) { <span class="kw">return</span> <span class="str">"...xlsx bytes..."</span>; }
+}
+
+<span class="kw">public class</span> <span class="cls">ReportGenerator</span> {
+    <span class="kw">private readonly</span> IReadOnlyDictionary&lt;<span class="prop">string</span>, <span class="iface">IReportFormatter</span>&gt; _formatters;
+
+    <span class="kw">public</span> <span class="cls">ReportGenerator</span>(IEnumerable&lt;<span class="iface">IReportFormatter</span>&gt; formatters)
+        => _formatters = formatters.ToDictionary(f => f.Format);
+
+    <span class="kw">public</span> <span class="prop">string</span> Generate(<span class="cls">Report</span> data, <span class="prop">string</span> format) {
+        <span class="kw">if</span> (!_formatters.TryGetValue(format, <span class="kw">out var</span> formatter))
+            <span class="kw">throw new</span> <span class="cls">NotSupportedException</span>(format);
+        <span class="kw">return</span> formatter.Generate(data);
+    }
+}
+<span class="cm">// Adding Word format? Just add WordReportFormatter. ReportGenerator never changes.</span></pre>
+  </div>
+
+  <div class="you-do">
+    <p><strong>OCP Task:</strong> Write a discount engine for an e-commerce system. Start with violations (giant switch on customer type), then refactor to be OCP-compliant. Then add a new "Seasonal" discount type — if you have to modify more than 1 file, your OCP isn't solid yet.</p>
+  </div>
+
+  <div class="section-eyebrow" style="margin-top:36px;">Principle 3 — LSP</div>
+  <h3 style="font-family:var(--serif);font-size:22px;margin-bottom:10px;">Liskov Substitution Principle</h3>
+  <div class="mentor-says">
+    <p>LSP is the principle that makes inheritance safe. The test: take any code that uses a base type. Now replace it with a derived type without telling the code. Does it still work correctly? If it fails or behaves unexpectedly — you've violated LSP.</p>
+    <p>The Square/Rectangle classic violation: Rectangle has <code>Width</code> and <code>Height</code> set independently. Square forces Width == Height. Any code that sets them independently will produce wrong results with a Square. Square cannot substitute Rectangle safely. Fix: don't inherit. Both implement an <code>IShape</code> interface instead.</p>
+    <p><strong>Red flag in code review:</strong> a derived class throws <code>NotImplementedException</code> for a method inherited from the base. That's LSP violated loudly.</p>
+  </div>
+
+  <div class="you-do">
+    <p><strong>LSP Task:</strong> Build the Square/Rectangle violation in C#. Write a test: <code>SetDimensions(Rectangle r) { r.Width = 4; r.Height = 5; Assert.Equal(20, r.Area()); }</code>. Pass in a Square. Watch it fail. Now fix the hierarchy so both implement <code>IShape</code> instead. Re-run the test — the fix should force you to change the test too (which is fine — that's the correct design).</p>
+  </div>
+
+  <div class="section-eyebrow" style="margin-top:36px;">Principles 4 & 5 — ISP & DIP</div>
+  <h3 style="font-family:var(--serif);font-size:22px;margin-bottom:10px;">Interface Segregation + Dependency Inversion</h3>
+  <div class="mentor-says">
+    <p><strong>ISP:</strong> If an implementing class has methods it doesn't use, your interface is too fat. The test: can you implement this interface without any <code>throw new NotImplementedException()</code>? If not — split the interface. In C# with DI, narrow interfaces are better for testability too: a class that needs only <code>IReader</code> shouldn't have to take an <code>IRepository</code> just because it lives there.</p>
+    <p><strong>DIP:</strong> This is what makes your code testable and your architecture clean. The rule: high-level modules (business logic) should never import from low-level modules (database, email, filesystem). Both should depend on abstractions. In ASP.NET Core, this is literally how the DI container is designed. You're already doing this — now understand WHY. Every time you register a service as an interface in <code>Program.cs</code>, you're applying DIP.</p>
+  </div>
+
+  <div class="you-do">
+    <p><strong>ISP + DIP Combined Task:</strong></p>
+    <ul>
+      <li>Take a fat <code>IWorkerRepository</code> interface that has Read, Write, Delete, Archive, Export methods</li>
+      <li>A read-only analytics service only needs Read — it's forced to take the full interface</li>
+      <li>Segregate: <code>IReadableRepository</code>, <code>IWritableRepository</code>, <code>IDeletable</code>, <code>IArchivable</code>, <code>IExportable</code></li>
+      <li>The analytics service now takes only <code>IReadableRepository</code> — DIP applied cleanly</li>
+      <li>Write a unit test for the analytics service using a mock <code>IReadableRepository</code> — notice how easy it is now</li>
+    </ul>
+  </div>
+
+  <div class="success-box">
+    <p><strong>Phase 2 exit criteria:</strong> Given any class, can you identify which SOLID principles it violates and explain exactly why? Can you refactor any SOLID violation cold — without referring to notes? Can you write a unit test that becomes easier to write after a SOLID refactor?</p>
+  </div>
+</section>
+
+<!-- ══════ SECTION 03: PATTERNS ══════ -->
+<section class="section" id="patterns">
+  <div class="section-eyebrow">Phase 03 · Weeks 6–10</div>
+  <div class="section-title">Design Patterns — Learn the Problem, Not the Pattern</div>
+  <div class="section-lead">23 patterns. 5 weeks. But here's the crucial thing: patterns are solutions to recurring problems. If you learn the pattern without understanding the problem it solves, you'll never know when to apply it. For each pattern, I'll show you the problem first, then the pattern as the solution.</div>
+
+  <div class="mentor-says">
+    <p>Most people memorise patterns in the abstract: "Singleton ensures one instance". That's useless. What you need to know is: "I'm creating a Logger in 5 different classes and getting 5 different instances — each one opens its own file handle. That's the problem. Singleton is the solution." <strong>Learn the smell that indicates a pattern, not just the pattern structure.</strong></p>
+    <p>Schedule: 2 patterns per week, Monday/Wednesday. Thursday/Saturday: implement each with a realistic .NET scenario. Week 10: review all patterns — can you name the problem that requires each one? That's your exit test.</p>
+  </div>
+
+  <div class="pattern-grid">
+    <div class="pattern-card">
+      <div class="pc-category cat-cr">Creational</div>
+      <div class="pc-name">Singleton</div>
+      <div class="pc-when">One and only one instance needed globally. State shared across the whole app.</div>
+      <div class="pc-signal">🔍 Signal: Creating same object in multiple places, getting inconsistent state</div>
+    </div>
+    <div class="pattern-card">
+      <div class="pc-category cat-cr">Creational</div>
+      <div class="pc-name">Factory Method</div>
+      <div class="pc-when">Caller needs to create an object but shouldn't know (or care) which concrete type it is.</div>
+      <div class="pc-signal">🔍 Signal: <code>new ConcreteType()</code> scattered through business code</div>
+    </div>
+    <div class="pattern-card">
+      <div class="pc-category cat-cr">Creational</div>
+      <div class="pc-name">Builder</div>
+      <div class="pc-when">Complex object needs many optional parameters. Constructor with 8 parameters is unreadable.</div>
+      <div class="pc-signal">🔍 Signal: Telescoping constructor — 5+ constructor overloads</div>
+    </div>
+    <div class="pattern-card">
+      <div class="pc-category cat-st">Structural</div>
+      <div class="pc-name">Adapter</div>
+      <div class="pc-when">You have a class that works, but its interface doesn't match what you need. You can't modify it.</div>
+      <div class="pc-signal">🔍 Signal: Third-party library doesn't match your interface contract</div>
+    </div>
+    <div class="pattern-card">
+      <div class="pc-category cat-st">Structural</div>
+      <div class="pc-name">Decorator</div>
+      <div class="pc-when">Add behaviour to objects without modifying their class. Stack multiple behaviours.</div>
+      <div class="pc-signal">🔍 Signal: Need caching AND logging AND validation on same class — separately toggleable</div>
+    </div>
+    <div class="pattern-card">
+      <div class="pc-category cat-st">Structural</div>
+      <div class="pc-name">Facade</div>
+      <div class="pc-when">Simplify a complex subsystem. One clean entry point hides ugly internal complexity.</div>
+      <div class="pc-signal">🔍 Signal: Callers have to orchestrate 5 different services to do one task</div>
+    </div>
+    <div class="pattern-card">
+      <div class="pc-category cat-st">Structural</div>
+      <div class="pc-name">Composite</div>
+      <div class="pc-when">Tree structures. Treat individual items and groups of items the same way.</div>
+      <div class="pc-signal">🔍 Signal: File system, org chart, UI component trees, menu hierarchies</div>
+    </div>
+    <div class="pattern-card">
+      <div class="pc-category cat-bh">Behavioral</div>
+      <div class="pc-name">Strategy</div>
+      <div class="pc-when">Algorithm varies based on context. Need to swap behaviours at runtime or configuration time.</div>
+      <div class="pc-signal">🔍 Signal: <code>if (type == X) doX() else if (type == Y) doY()</code> in business logic</div>
+    </div>
+    <div class="pattern-card">
+      <div class="pc-category cat-bh">Behavioral</div>
+      <div class="pc-name">Observer</div>
+      <div class="pc-when">One thing changes, many others need to know. Decoupled event system needed.</div>
+      <div class="pc-signal">🔍 Signal: Object A calls B.Update(), C.Notify(), D.Refresh() directly — tight coupling</div>
+    </div>
+    <div class="pattern-card">
+      <div class="pc-category cat-bh">Behavioral</div>
+      <div class="pc-name">Command</div>
+      <div class="pc-when">Encapsulate a request as an object. Need undo/redo, queuing, logging of operations.</div>
+      <div class="pc-signal">🔍 Signal: Need to undo user actions, or queue operations for async execution</div>
+    </div>
+    <div class="pattern-card">
+      <div class="pc-category cat-bh">Behavioral</div>
+      <div class="pc-name">State</div>
+      <div class="pc-when">Object behaviour changes dramatically based on internal state. State machine needed.</div>
+      <div class="pc-signal">🔍 Signal: Giant if/switch on a status enum, same method behaves totally differently</div>
+    </div>
+    <div class="pattern-card">
+      <div class="pc-category cat-bh">Behavioral</div>
+      <div class="pc-name">Template Method</div>
+      <div class="pc-when">Algorithm structure is fixed, but some steps need customisation per subclass.</div>
+      <div class="pc-signal">🔍 Signal: Multiple classes doing same process with minor variation in 1-2 steps</div>
+    </div>
+  </div>
+
+  <div class="mentor-says" style="margin-top:32px;">
+    <p>For each pattern, your practice cycle is: (1) Read the "signal" — what problem does it solve? (2) Write the violation code — code that needs the pattern but doesn't use it. (3) Implement the pattern to fix it. (4) Write a unit test that proves the pattern works. (5) Ask: "Where in my Ascendion codebase could this pattern have helped?"</p>
+    <p><strong>Don't do all patterns in sequence like a textbook. Do each one until it's automatic, then move on.</strong></p>
+  </div>
+
+  <div class="you-do">
+    <p><strong>Pattern Practice — Week 6 (Singleton + Factory):</strong></p>
+    <ul>
+      <li><strong>Singleton:</strong> Build a thread-safe <code>ConfigurationManager</code> using <code>Lazy&lt;T&gt;</code>. Then write a test that creates it from 100 threads simultaneously and verifies only one instance exists.</li>
+      <li><strong>Factory:</strong> Build a <code>NotificationFactory</code> that creates Email/SMS/Push senders based on a config string. The caller only sees <code>INotificationSender</code> — never the concrete type. Register it in .NET DI and verify swapping is seamless.</li>
+    </ul>
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-label">C# · State Pattern — Order State Machine <span>Week 8 Deep Dive</span></div>
+    <pre class="code"><span class="cm">// The State pattern replaces this kind of mess:</span>
+<span class="cm">// if (order.Status == "Pending") { /* 20 lines */ }</span>
+<span class="cm">// else if (order.Status == "Processing") { /* 30 lines */ }</span>
+<span class="cm">// — adding a new status means modifying this method. Brittle.</span>
+
+<span class="kw">public interface</span> <span class="iface">IOrderState</span> {
+    <span class="kw">void</span> Confirm(<span class="cls">Order</span> order);
+    <span class="kw">void</span> Ship(<span class="cls">Order</span> order);
+    <span class="kw">void</span> Cancel(<span class="cls">Order</span> order);
+    <span class="prop">string</span> StatusName { <span class="kw">get</span>; }
+}
+
+<span class="kw">public class</span> <span class="cls">PendingState</span> : <span class="iface">IOrderState</span> {
+    <span class="kw">public</span> <span class="prop">string</span> StatusName => <span class="str">"Pending"</span>;
+    <span class="kw">public void</span> Confirm(<span class="cls">Order</span> o) => o.TransitionTo(<span class="kw">new</span> <span class="cls">ProcessingState</span>());
+    <span class="kw">public void</span> Ship(<span class="cls">Order</span> o) => <span class="kw">throw new</span> <span class="cls">InvalidOperationException</span>(<span class="str">"Confirm first!"</span>);
+    <span class="kw">public void</span> Cancel(<span class="cls">Order</span> o) => o.TransitionTo(<span class="kw">new</span> <span class="cls">CancelledState</span>());
+}
+
+<span class="kw">public class</span> <span class="cls">ProcessingState</span> : <span class="iface">IOrderState</span> {
+    <span class="kw">public</span> <span class="prop">string</span> StatusName => <span class="str">"Processing"</span>;
+    <span class="kw">public void</span> Confirm(<span class="cls">Order</span> o) => <span class="kw">throw new</span> <span class="cls">InvalidOperationException</span>(<span class="str">"Already confirmed"</span>);
+    <span class="kw">public void</span> Ship(<span class="cls">Order</span> o) => o.TransitionTo(<span class="kw">new</span> <span class="cls">ShippedState</span>());
+    <span class="kw">public void</span> Cancel(<span class="cls">Order</span> o) => o.TransitionTo(<span class="kw">new</span> <span class="cls">CancelledState</span>());
+}
+
+<span class="kw">public class</span> <span class="cls">Order</span> {
+    <span class="kw">private</span> <span class="iface">IOrderState</span> _state = <span class="kw">new</span> <span class="cls">PendingState</span>();
+    <span class="kw">public</span> <span class="prop">string</span> Status => _state.StatusName;
+
+    <span class="kw">internal void</span> TransitionTo(<span class="iface">IOrderState</span> newState) => _state = newState;
+    <span class="kw">public void</span> Confirm() => _state.Confirm(<span class="kw">this</span>);
+    <span class="kw">public void</span> Ship() => _state.Ship(<span class="kw">this</span>);
+    <span class="kw">public void</span> Cancel() => _state.Cancel(<span class="kw">this</span>);
+}
+<span class="cm">// Adding "RefundRequested" state = new class only. Zero changes to Order.</span></pre>
+  </div>
+
+  <div class="you-do">
+    <p><strong>Patterns Capstone — Week 10:</strong> Build a mini <code>LoggingFramework</code> from scratch that uses: Strategy (log level filtering), Decorator (chaining console + file + DB appenders), Builder (configuring the logger), Observer (notifying alerts when ERROR is logged). This forces you to use 4 patterns together in one coherent system. It will be hard. That difficulty is the point.</p>
+  </div>
+
+  <div class="success-box">
+    <p><strong>Phase 3 exit criteria:</strong> Can you name the "signal smell" for each of the 8 must-know patterns? Can you implement any of them from scratch in 20 minutes? Can you explain which pattern to use and why for a given scenario without hesitating?</p>
+  </div>
+</section>
+
+<!-- ══════ SECTION 04: LLD PROBLEMS ══════ -->
+<section class="section" id="practice">
+  <div class="section-eyebrow">Phase 04 · Weeks 11–14</div>
+  <div class="section-title">LLD Problems — The 5-Step Framework</div>
+  <div class="section-lead">Every LLD problem you'll ever face — in an interview or at work — can be solved with the same 5-step process. Internalise this process until it's automatic. It's not just a framework; it's a habit of mind.</div>
+
+  <div class="mentor-says">
+    <p>Here's the brutal truth about LLD practice: most engineers approach problems the wrong way. They immediately start thinking about code — "OK so I need a ParkingLot class with an array of spots…" Wrong order. You're building before you understand. The result is a design that works for the happy path and breaks on every edge case.</p>
+    <p>The correct order is: <strong>Understand → Model → Design → Validate → Implement.</strong> The first two steps have nothing to do with code. They're about thinking. And they're what interviewers care about most — because a senior engineer who thinks before coding is rare and valuable.</p>
+    <p><strong>This is your non-negotiable rule for every problem you practice: you are not allowed to write a single class or method until you've completed Steps 1 and 2 on paper or whiteboard.</strong></p>
+  </div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="step-title">Clarify Requirements — Ask 5 Questions Before Touching Code</div>
+        <div class="step-desc">For any problem, ask: (1) Who are the actors? (Who uses this system?) (2) What are the core actions each actor performs? (3) What are the scale constraints? (single machine? distributed?) (4) What's explicitly OUT of scope? (5) What are the key edge cases? — Write these down. In an interview, saying "let me ask a few questions first" signals senior thinking immediately. An engineer who jumps straight to coding is signalling junior thinking.</div>
+        <div class="step-time">3–5 minutes in interview · Write before coding in practice</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="step-title">Identify Entities — Every Noun Is a Candidate Class</div>
+        <div class="step-desc">Read the requirements. Highlight every noun. Each noun is a candidate class. Then apply two filters: Does it have both state AND behaviour? (If only state, it might be a data object. If only behaviour, it might be a service.) Is it distinct enough to warrant its own class, or is it just an attribute of another class? A "Parking Spot Location" is probably just an attribute of ParkingSpot, not its own class. "Vehicle" has state (plate, type) and behaviour (enter, exit) — it's a class. Write your entity list before touching an IDE.</div>
+        <div class="step-time">5 minutes · Always on paper/whiteboard first</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="step-title">Define Relationships — is-a vs has-a vs uses</div>
+        <div class="step-desc">For each pair of entities, ask: Is it inheritance (is-a)? Composition (has-a, lifecycle coupled)? Aggregation (has-a, lifecycle independent)? Association (uses, no ownership)? Draw this out. A ParkingLot HAS floors (composition — floors don't exist without the lot). A Floor HAS spots (composition). A Spot IS-A ParkingEntity of a specific size. A Vehicle USES a Spot (association — vehicle exists without the spot). This entity-relationship map becomes your class diagram.</div>
+        <div class="step-time">5 minutes · Sketch on paper</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <div class="step-title">Apply Patterns — Name Them and Justify Them</div>
+        <div class="step-desc">Look at your design. Where does behaviour vary? (Strategy). Where do you have state transitions? (State). Where do objects need to notify others? (Observer). Where are you creating families of objects? (Factory). Don't force patterns. One or two well-justified patterns per problem is ideal. Three is solid. Five is suspiciously forced. The key word is "justify" — in an interview, say "I'd use Strategy here because the fee calculation logic varies by vehicle type and we'll likely add more types" — not just "I'll use Strategy here".</div>
+        <div class="step-time">5 minutes · Name patterns out loud in practice</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <div class="step-title">Implement — Interfaces First, Then Key Classes</div>
+        <div class="step-desc">Start with interfaces — not classes. Define the contracts first. Then implement 3–4 key classes that show your design thinking most clearly. You don't need to implement everything — interviewers know. What they're evaluating is whether your code matches your design intent. Common mistake: people write getters/setters for 20 minutes and never get to the interesting logic. Skip boilerplate. Focus on the parts that show OOP thinking — polymorphic hierarchies, pattern implementations, state transitions.</div>
+        <div class="step-time">20–30 minutes · Interfaces before classes always</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-eyebrow" style="margin-top:48px;">Problem Deep-Dive #1</div>
+  <div class="problem-card">
+    <div class="problem-header">
+      <div class="problem-title">Parking Lot System</div>
+      <div class="problem-badges">
+        <span class="badge badge-easy">Foundational</span>
+        <span class="badge badge-must">Must Do First</span>
+      </div>
+    </div>
+    <div class="problem-body">
+      <div class="problem-section-title">Why Start Here</div>
+      <p>This is the "Hello World" of LLD problems. Every concept you've learned maps cleanly onto it: OOP hierarchy for vehicles, State pattern for spot availability, Strategy for pricing, Factory for vehicle types. It's also asked at Microsoft, Amazon, and Google frequently. Master this one and you have a template for 10 other problems.</p>
+
+      <div class="problem-section-title">Step 1 — Your Clarifying Questions</div>
+      <p>Before reading ahead, pause and ask yourself: What types of vehicles? Multiple floors? Hourly vs flat pricing? Handicapped spots? Entry/exit gates? Reserved spots? This mental habit of questioning is what you practice with every problem.</p>
+
+      <div class="problem-section-title">Step 2 — Entity List</div>
+      <ul>
+        <li><strong>ParkingLot</strong> — the top-level container. Has floors, entry/exit gates</li>
+        <li><strong>ParkingFloor</strong> — has spots. Knows how many are available</li>
+        <li><strong>ParkingSpot</strong> — abstract. Has ID, spot type, availability status</li>
+        <li><strong>CompactSpot, LargeSpot, HandicappedSpot</strong> — concrete spots (inherit ParkingSpot)</li>
+        <li><strong>Vehicle</strong> — abstract. Has plate number, vehicle type</li>
+        <li><strong>Car, Truck, Motorcycle</strong> — concrete vehicles</li>
+        <li><strong>ParkingTicket</strong> — issued on entry. Has entry time, spot, vehicle</li>
+        <li><strong>Gate (Entry/Exit)</strong> — handles check-in/check-out</li>
+        <li><strong>PricingStrategy</strong> — interface. Calculates fee from ticket</li>
+        <li><strong>ParkingDisplay</strong> — optional: observer that updates availability boards</li>
+      </ul>
+
+      <div class="problem-section-title">Step 3 — Key Relationships</div>
+      <ul>
+        <li>ParkingLot COMPOSES ParkingFloors (floors don't exist without lot)</li>
+        <li>ParkingFloor COMPOSES ParkingSpots</li>
+        <li>Car/Truck/Motorcycle INHERIT Vehicle (is-a)</li>
+        <li>CompactSpot INHERITS ParkingSpot (is-a)</li>
+        <li>ParkingTicket ASSOCIATES with Vehicle and ParkingSpot (uses, doesn't own)</li>
+        <li>Gate USES PricingStrategy (dependency, not ownership)</li>
+      </ul>
+
+      <div class="problem-section-title">Step 4 — Patterns Applied</div>
+      <ul>
+        <li><strong>State</strong> on ParkingSpot: Available → Occupied → Reserved. Each state handles its own transitions</li>
+        <li><strong>Strategy</strong> for pricing: HourlyPricing, FlatRatePricing, PremiumPricing — swappable without changing Gate</li>
+        <li><strong>Factory</strong> for vehicle creation: VehicleFactory creates correct subtype from a vehicle type enum</li>
+        <li><strong>Observer</strong> (optional): When spot status changes, notify ParkingDisplay boards</li>
+      </ul>
+
+      <div class="problem-section-title">Your Practice Task</div>
+      <p>Time yourself: implement the Parking Lot with the 5-step process. Target: Step 1–4 in 15 minutes on paper. Step 5 in 30 minutes of coding. First attempt will likely take 90 minutes. Second attempt (a week later, from scratch) should take 45. Third attempt should be under 30 minutes. That compression in time is your skill growing.</p>
+    </div>
+  </div>
+
+  <div class="problem-card" style="margin-top:20px;">
+    <div class="problem-header">
+      <div class="problem-title">Chess Game</div>
+      <div class="problem-badges">
+        <span class="badge badge-med">Intermediate</span>
+        <span class="badge badge-must">FAANG Favourite</span>
+      </div>
+    </div>
+    <div class="problem-body">
+      <div class="problem-section-title">Why Chess Is the Ultimate LLD Test</div>
+      <p>Chess requires all of polymorphism (each piece moves differently), Command pattern (move history + undo), Observer (check detection), Factory (piece creation), and correct use of composition (Board contains Squares, Squares reference Pieces). It tests your ability to model a domain you know well in an object-oriented way without over-engineering it.</p>
+
+      <div class="problem-section-title">The Core Design Challenge</div>
+      <p>Where do you put move validation logic? Three options: in each Piece subclass (ValidMove()), in the Board class (ValidateMove(piece, position)), or in a separate MoveValidator. Think about this before coding. The answer: each Piece knows its own movement rules (it's part of what makes it that piece). The Board validates that the move doesn't put the moving player's King in check — that's Board-level concern. MoveValidator handles the interaction between both. This is SRP in action.</p>
+
+      <div class="problem-section-title">Key Design Decisions to Articulate in Interview</div>
+      <ul>
+        <li>"I'm making Piece abstract with abstract <code>GetValidMoves(Board)</code> — each piece implements its own movement logic"</li>
+        <li>"Command pattern for Move — because Chess requires undo/redo, and every move needs to be reversible"</li>
+        <li>"Observer for check detection — when a King's position changes, all pieces notify a CheckDetector"</li>
+        <li>"Board is not an array of pieces — it's an array of Squares. Square can be empty or contain a Piece. This makes null checks cleaner"</li>
+      </ul>
+
+      <div class="problem-section-title">Your Practice Task</div>
+      <p>Build Chess in 3 sessions: Session 1 — entities and relationships only (no methods, just class skeletons). Session 2 — implement piece movement for King, Queen, Rook (the three different movement types cover all cases). Session 3 — implement the Command pattern for moves with undo. Don't implement the full game — demonstrate the design pattern knowledge clearly.</p>
+    </div>
+  </div>
+
+  <div class="mentor-says" style="margin-top:28px;">
+    <p>After completing each problem, do a "post-mortem" in your design journal: What design decisions did I make? Were there alternatives I didn't consider? What would change if the requirements doubled in complexity? What pattern did I use that felt forced? This reflection is what converts practice into genuine expertise.</p>
+    <p><strong>The sequence for practice problems: Parking Lot → Library System → ATM/Vending Machine → Elevator → BookMyShow → Chess → Food Delivery → Splitwise. Do them in this order. Each one introduces one new complexity layer.</strong></p>
+  </div>
+
+  <div class="success-box">
+    <p><strong>Phase 4 exit criteria:</strong> Can you design any L1/L2 problem fully (entities, relationships, patterns, key code) in 45 minutes without looking at notes? Can you name at least 2 design alternatives for each major decision and justify why you chose the one you did?</p>
+  </div>
+</section>
+
+<!-- ══════ SECTION 05: INTERVIEW ══════ -->
+<section class="section" id="interview">
+  <div class="section-eyebrow">Phase 05 · Weeks 15–16</div>
+  <div class="section-title">Interview Mastery — The Performance Layer</div>
+  <div class="section-lead">You now have the skills. What you need is the performance of those skills under pressure, in real time, in front of an interviewer. This phase is entirely about that — not learning new concepts, but sharpening your delivery.</div>
+
+  <div class="mentor-says">
+    <p>Let me tell you what interviewers actually evaluate in an LLD round. It's not whether you know what a Singleton is. It's: Do you ask the right questions before jumping in? Do you think out loud in a way that's easy to follow? Do you make design decisions and then justify them? Do you adapt when they push back on a decision? Do you know what you don't know and say so honestly?</p>
+    <p>Every one of those is a communication skill, not a technical skill. You build these through mock interviews — not more reading. <strong>Week 15: 3 mock interviews. Week 16: 3 more mock interviews. That's your entire schedule for these 2 weeks.</strong></p>
+  </div>
+
+  <div class="section-eyebrow" style="margin-top:32px;">Interview Communication Patterns</div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">①</div>
+      <div class="step-body">
+        <div class="step-title">Open Every Problem the Same Way</div>
+        <div class="step-desc">Say: <em>"Before I start designing, let me ask a few clarifying questions."</em> Then ask your 3–5 questions. Then say: <em>"Based on that, let me identify the key entities first."</em> This scripted opening buys you thinking time, signals a structured approach, and immediately impresses the interviewer. Practise this opening until it comes out automatically under pressure.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">②</div>
+      <div class="step-body">
+        <div class="step-title">Name Every Decision Out Loud</div>
+        <div class="step-desc">Don't just write code. Say: <em>"I'm making Vehicle abstract here because Car, Truck, and Motorcycle are all vehicles but have different weight and size constraints that will affect which spots they can use."</em> Interviewers can't see your reasoning — you have to speak it. Every class you create, every interface you define, every pattern you apply: name it and justify it. This is the single highest-impact thing you can do in an LLD interview.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">③</div>
+      <div class="step-body">
+        <div class="step-title">Handle Pushback Gracefully</div>
+        <div class="step-desc">When the interviewer says "why didn't you use X instead?" — never immediately capitulate and change your design. Say: <em>"That's a good point. The tradeoff between my approach and X is: mine optimises for Y, yours would be better if Z. Given the requirements we discussed, I went with mine — but I'm open to reconsidering if Z is a priority."</em> This response shows confidence, system thinking, and collaboration. All are senior engineer signals.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">④</div>
+      <div class="step-body">
+        <div class="step-title">Know When to Write Code vs Keep Designing</div>
+        <div class="step-desc">In a 45-minute interview, spend the first 15 minutes on Steps 1–4 (requirements, entities, relationships, patterns). Then spend 25 minutes on code — but only implement the 3–4 classes that best demonstrate your design thinking. Save 5 minutes at the end for "if I had more time, I'd also add X, Y, Z". Never let code writing consume the full session — the design discussion is what scores the most points.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-eyebrow" style="margin-top:36px;">Common Interview Questions — With Frameworks</div>
+
+  <div class="quiz-card">
+    <div class="quiz-q" onclick="toggleQuiz(this)">
+      "Explain the difference between abstract class and interface in C#. When do you use each?"
+      <span class="arrow">▼</span>
+    </div>
+    <div class="quiz-a">
+      <p><strong>Framework:</strong> Interface = pure contract, no implementation, multiple inheritance. Abstract class = partial implementation, single inheritance, can have state and constructors.</p>
+      <p>Use interface when: you're defining a capability that unrelated classes can have (<code>IDisposable</code>, <code>IComparable</code>). Use abstract class when: you want to share implementation across related types and there's a genuine "is-a" hierarchy.</p>
+      <p>Gold answer addition: "In .NET, I lean towards interfaces because they're more testable and support DI better. I use abstract classes when I have genuine shared behaviour that all subclasses need — like a base <code>BaseRepository</code> that handles connection management, letting concrete repos focus only on their queries."</p>
+    </div>
+  </div>
+
+  <div class="quiz-card">
+    <div class="quiz-q" onclick="toggleQuiz(this)">
+      "Design a Notification System. Walk me through your approach."
+      <span class="arrow">▼</span>
+    </div>
+    <div class="quiz-a">
+      <p><strong>Framework:</strong> Step 1: Ask — what channels (Email/SMS/Push)? Multiple recipients? Priority levels? Templating? Retry on failure? Step 2: Entities — Notification, NotificationRequest, INotificationChannel, NotificationService, NotificationTemplate. Step 3: Relationships — NotificationService uses INotificationChannel (association, DIP). NotificationRequest aggregates channels and recipients. Step 4: Patterns — Strategy (channel-per-implementation), Observer (for tracking delivery status), Builder (building complex NotificationRequest). Step 5: Show INotificationChannel interface first, then Email/SMS implementations, then NotificationService injecting all channels via DI.</p>
+    </div>
+  </div>
+
+  <div class="quiz-card">
+    <div class="quiz-q" onclick="toggleQuiz(this)">
+      "What's the difference between Strategy and State patterns?"
+      <span class="arrow">▼</span>
+    </div>
+    <div class="quiz-a">
+      <p><strong>The answer most engineers get wrong:</strong> "Strategy is about choosing an algorithm, State is about object state." That's incomplete.</p>
+      <p><strong>The complete answer:</strong> In Strategy, the strategies are independent of each other — they don't know about each other. The context holds the strategy and can switch between them. In State, each state object can trigger transitions to other states — they know about each other's existence (or at least about the transitions). The state machine logic lives in the state objects, not just in the context.</p>
+      <p>Example: Payment Strategy — each payment method doesn't know about other methods. Order State — ProcessingState knows it can transition to ShippedState or CancelledState. The state itself drives the transitions.</p>
+    </div>
+  </div>
+
+  <div class="quiz-card">
+    <div class="quiz-q" onclick="toggleQuiz(this)">
+      "How would you handle concurrency in a Parking Lot — two cars arriving at the same spot simultaneously?"
+      <span class="arrow">▼</span>
+    </div>
+    <div class="quiz-a">
+      <p>This tests whether you think about thread safety in LLD. The answer has two layers:</p>
+      <p><strong>Design layer:</strong> Spot assignment should be an atomic operation. Use a locking mechanism at the Floor level (not the Lot level, to allow parallel access to different floors). ParkingSpot's status transition should be atomic — check-then-act as one operation.</p>
+      <p><strong>C# layer:</strong> Use <code>lock</code> on spot assignment, or use <code>Interlocked</code> operations on a status integer, or use a concurrent data structure. <code>ConcurrentDictionary</code> for available spots is a good choice. Say: "In a distributed system, I'd use a distributed lock (Redis) or an optimistic concurrency approach with a version field."</p>
+      <p>Mentioning this automatically — even before being asked — is a senior engineer signal.</p>
+    </div>
+  </div>
+
+  <div class="you-do" style="margin-top:28px;">
+    <p><strong>Weeks 15–16 Mock Schedule:</strong></p>
+    <ul>
+      <li>Week 15 Day 1: Mock — Design a Vending Machine (45 min, time-boxed, no notes)</li>
+      <li>Week 15 Day 3: Mock — Design an Elevator System</li>
+      <li>Week 15 Day 5: Mock — Design BookMyShow with a peer (Pramp or friend)</li>
+      <li>Week 16 Day 1: Mock — Design a new problem you've never seen before</li>
+      <li>Week 16 Day 3: Mock — Any FAANG-level problem, full 5-step + code</li>
+      <li>Week 16 Day 5: Final self-assessment — Design Chess from scratch, time it, review recording</li>
+      <li>After each mock: write 3 things that went well, 2 things to improve, 1 specific change for next time</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ══════ SECTION 06: WEEKLY SCHEDULE ══════ -->
+<section class="section" id="weekly">
+  <div class="section-eyebrow">Full 16-Week Plan</div>
+  <div class="section-title">Day-by-Day Schedule</div>
+  <div class="section-lead">This is your operational plan. Every day has a specific task. No guessing, no "I'll figure out what to do today". Open this, find your week, do the task. Adjust only if genuinely blocked — not if it feels hard.</div>
+
+  <div class="mentor-says">
+    <p>You have a full-time job at Ascendion. That means your study time is precious and finite. This schedule assumes <strong>90 minutes per weekday, 2–3 hours on Saturday, rest on Sunday</strong>. That's around 10–11 hours per week. Protect those sessions like meetings you can't cancel. The compounding effect of 10 consistent hours beats 20 sporadic hours every time.</p>
+    <p>The toughest phase is Weeks 6–10 (Patterns). It feels like a lot of abstract concepts. Push through. The payoff comes in Weeks 11–14 when everything suddenly clicks together and you start seeing patterns everywhere.</p>
+  </div>
+
+  <div class="week-plan">
+
+    <div class="week-phase">
+      <div class="week-phase-title">Phase 1 · OOP Foundations — Weeks 1–3</div>
+      <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;border:1px solid var(--border);min-width:700px;">
+          <tr>
+            <td style="padding:8px 10px;border:1px solid var(--border);background:var(--surface2);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text3);min-width:70px;">Week</td>
+            <td style="padding:8px 10px;border:1px solid var(--border);background:var(--surface2);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text3);">Mon</td>
+            <td style="padding:8px 10px;border:1px solid var(--border);background:var(--surface2);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text3);">Tue</td>
+            <td style="padding:8px 10px;border:1px solid var(--border);background:var(--surface2);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text3);">Wed</td>
+            <td style="padding:8px 10px;border:1px solid var(--border);background:var(--surface2);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text3);">Thu</td>
+            <td style="padding:8px 10px;border:1px solid var(--border);background:var(--surface2);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text3);">Fri</td>
+            <td style="padding:8px 10px;border:1px solid var(--border);background:var(--surface2);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text3);">Sat</td>
+          </tr>
+          <tr>
+            <td style="padding:10px;border:1px solid var(--border);font-size:10px;color:var(--mentor);font-weight:700;">Wk 1</td>
+            <td style="padding:10px;border:1px solid var(--border);background:rgba(249,115,22,0.05);font-size:11px;color:#fed7aa;">Study: Encapsulation concept + C# properties deep dive</td>
+            <td style="padding:10px;border:1px solid var(--border);background:rgba(56,189,248,0.05);font-size:11px;color:#bae6fd;">Code: BankAccount bad→good refactor + 3 unit tests</td>
+            <td style="padding:10px;border:1px solid var(--border);background:rgba(249,115,22,0.05);font-size:11px;color:#fed7aa;">Study: Abstraction + interface vs abstract class</td>
+            <td style="padding:10px;border:1px solid var(--border);background:rgba(56,189,248,0.05);font-size:11px;color:#bae6fd;">Code: IPaymentProcessor + 3 concrete implementations</td>
+            <td style="padding:10px;border:1px solid var(--border);background:rgba(74,222,128,0.05);font-size:11px;color:#bbf7d0;">Review: Explain both concepts without notes (5 min each)</td>
+            <td style="padding:10px;border:1px solid var(--border);background:rgba(56,189,248,0.05);font-size:11px;color:#bae6fd;">Deep: Build CheckoutService using both concepts together. Journal entry.</td>
+          </tr>
+          <tr>
+            <td style="padding:10px;border:1px solid var(--border);font-size:10px;color:var(--mentor);font-weight:700;">Wk 2</td>
+            <td style="padding:10px;border:1px solid var(--border);background:rgba(249,115,22,0.05);font-size:11px;color:#fed7aa;">Study: Inheritance rules + when NOT to use it</td>
+            <td style="padding:10px;border:1px solid var(--border);background:rgba(56,189,248,0.05);font-size:11px;color:#bae6fd;">Code: Shape hierarchy + Stack-as-composition example</td>
+            <td style="padding:10px;border:1px solid var(--border);background:rgba(249,115,22,0.05);font-size:11px;color:#fed7aa;">Study: Polymorphism — runtime vs compile time</td>
+            <td style="padding:10px;border:1px solid var(--border);background:rgba(56,189,248,0.05);font-size:11px;color:#bae6fd;">Code: TaxCalculator — if/else → polymorphism refactor</td>
+            <td style="padding:10px;border:1px solid var(--border);background:rgba(74,222,128,0.05);font-size:11px;color:#bbf7d0;">Review: Quiz yourself — 5 composition vs inheritance scenarios</td>
+            <td style="padding:10px;border:1px solid var(--border);background:rgba(56,189,248,0.05);font-size:11px;color:#bae6fd;">Deep: Build Animal hierarchy. Extend with ColoredAnimal using composition. Write tests.</td>
+          </tr>
+          <tr>
+            <td style="padding:10px;border:1px solid var(--border);font-size:10px;color:var(--mentor);font-weight:700;">Wk 3</td>
+            <td style="padding:10px;border:1px solid var(--border);background:rgba(249,115,22,0.05);font-size:11px;color:#fed7aa;">Study: Association vs Aggregation vs Composition — with diagrams</td>
+            <td style="padding:10px;border:1px solid var(--border);background:rgba(56,189,248,0.05);font-size:11px;color:#bae6fd;">Code: Model University (Department, Course, Student, Teacher) with correct relationships</td>
+            <td style="padding:10px;border:1px solid var(--border);background:rgba(249,115,22,0.05);font-size:11px;color:#fed7aa;">Study: Review all 4 pillars + ISP + composition rule</td>
+            <td style="padding:10px;border:1px solid var(--border);background:rgba(56,189,248,0.05);font-size:11px;color:#bae6fd;">Code: Refactor existing Ascendion code applying OOP improvements</td>
+            <td style="padding:10px;border:1px solid var(--border);background:rgba(74,222,128,0.05);font-size:11px;color:#bbf7d0;">Review: Phase 1 exit test — explain all 4 pillars with examples without notes</td>
+            <td style="padding:10px;border:1px solid var(--border);background:rgba(168,85,247,0.08);font-size:11px;color:#d8b4fe;">Capstone: NotificationSystem from scratch. No help. Time it.</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="week-phase">
+      <div class="week-phase-title">Phase 2 · SOLID Principles — Weeks 4–5</div>
+      <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;border:1px solid var(--border);min-width:700px;">
+          <tr>
+            <td style="padding:8px 10px;border:1px solid var(--border);background:var(--surface2);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text3);min-width:70px;">Week</td>
+            <td style="padding:8px 10px;border:1px solid var(--border);background:var(--surface2);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text3);">Mon</td>
+            <td style="padding:8px 10px;border:1px solid var(--border);background:var(--surface2);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text3);">Tue</td>
+            <td style="padding:8px 10px;border:1px solid var(--border);background:var(--surface2);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text3);">Wed</td>
+            <td style="padding:8px 10px;border:1px solid var(--border);background:var(--surface2);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text3);">Thu</td>
+            <td style="padding:8px 10px;border:1px solid var(--border);background:var(--surface2);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text3);">Fri</td>
+            <td style="padding:8px 10px;border:1px solid var(--border);background:var(--surface2);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text3);">Sat</td>
+          </tr>
+          <tr>
+            <td style="padding:10px;border:1px solid var(--border);font-size:10px;color:var(--mentor);font-weight:700;">Wk 4</td>
+            <td style="padding:10px;border:1px solid var(--border);background:rgba(249,115,22,0.05);font-size:11px;color:#fed7aa;">SRP: Study violation examples. Identify 3 reasons to change in fat class.</td>
+            <td style="padding:10px;border:1px solid var(--border);background:rgba(56,189,248,0.05);font-size:11px;color:#bae6fd;">SRP: Refactor fat UserService into 4 separate classes. Write tests.</td>
+            <td style="padding:10px;border:1px solid var(--border);background:rgba(249,115,22,0.05);font-size:11px;color:#fed7aa;">OCP: Study. Write a discount system that violates OCP first.</td>
+            <td style="padding:10px;border:1px solid var(--border);background:rgba(56,189,248,0.05);font-size:11px;color:#bae6fd;">OCP: Refactor to be OCP-compliant. Add new discount type — verify zero changes to existing classes.</td>
+            <td style="padding:10px;border:1px solid var(--border);background:rgba(249,115,22,0.05);font-size:11px;color:#fed7aa;">LSP: Study Square/Rectangle classic. Write the failing test.</td>
+            <td style="padding:10px;border:1px solid var(--border);background:rgba(56,189,248,0.05);font-size:11px;color:#bae6fd;">LSP: Fix hierarchy using interface. Verify tests pass with fix.</td>
+          </tr>
+          <tr>
+            <td style="padding:10px;border:1px solid var(--border);font-size:10px;color:var(--mentor);font-weight:700;">Wk 5</td>
+            <td style="padding:10px;border:1px solid var(--border);background:rgba(249,115,22,0.05);font-size:11px;color:#fed7aa;">ISP: Study fat interface problem. Design IMultiFunctionDevice violation.</td>
+            <td style="padding:10px;border:1px solid var(--border);background:rgba(56,189,248,0.05);font-size:11px;color:#bae6fd;">ISP: Segregate into IPrinter, IScanner, IFax. Wire up with multiple classes.</td>
+            <td style="padding:10px;border:1px solid var(--border);background:rgba(249,115,22,0.05);font-size:11px;color:#fed7aa;">DIP: Study high-level/low-level coupling. Identify in your Ascendion code.</td>
+            <td style="padding:10px;border:1px solid var(--border);background:rgba(56,189,248,0.05);font-size:11px;color:#bae6fd;">DIP: Refactor OrderService using constructor injection. Register in DI. Test with mock.</td>
+            <td style="padding:10px;border:1px solid var(--border);background:rgba(74,222,128,0.05);font-size:11px;color:#bbf7d0;">Review: Phase 2 exit test — identify all violations in a given class snippet</td>
+            <td style="padding:10px;border:1px solid var(--border);background:rgba(168,85,247,0.08);font-size:11px;color:#d8b4fe;">Capstone: Audit + refactor one real file from Ascendion codebase. All 5 principles applied.</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="week-phase">
+      <div class="week-phase-title">Phase 3 · Design Patterns — Weeks 6–10 (summary view)</div>
+      <table style="width:100%;border-collapse:collapse;border:1px solid var(--border);">
+        <tr>
+          <td style="padding:8px 12px;border:1px solid var(--border);background:var(--surface2);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text3);">Week</td>
+          <td style="padding:8px 12px;border:1px solid var(--border);background:var(--surface2);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text3);">Mon–Tue</td>
+          <td style="padding:8px 12px;border:1px solid var(--border);background:var(--surface2);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text3);">Wed–Thu</td>
+          <td style="padding:8px 12px;border:1px solid var(--border);background:var(--surface2);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text3);">Fri</td>
+          <td style="padding:8px 12px;border:1px solid var(--border);background:var(--surface2);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text3);">Sat</td>
+        </tr>
+        <tr>
+          <td style="padding:10px 12px;border:1px solid var(--border);font-size:11px;color:var(--mentor);font-weight:700;">Wk 6</td>
+          <td style="padding:10px 12px;border:1px solid var(--border);background:rgba(249,115,22,0.05);font-size:11px;color:#fed7aa;">Singleton (Lazy&lt;T&gt;) + Factory Method</td>
+          <td style="padding:10px 12px;border:1px solid var(--border);background:rgba(56,189,248,0.05);font-size:11px;color:#bae6fd;">Implement both: AppLogger + NotificationFactory</td>
+          <td style="padding:10px 12px;border:1px solid var(--border);background:rgba(74,222,128,0.05);font-size:11px;color:#bbf7d0;">Review: When to use each. Write signals.</td>
+          <td style="padding:10px 12px;border:1px solid var(--border);background:rgba(168,85,247,0.08);font-size:11px;color:#d8b4fe;">Mini project: Config system using both patterns together</td>
+        </tr>
+        <tr>
+          <td style="padding:10px 12px;border:1px solid var(--border);font-size:11px;color:var(--mentor);font-weight:700;">Wk 7</td>
+          <td style="padding:10px 12px;border:1px solid var(--border);background:rgba(249,115,22,0.05);font-size:11px;color:#fed7aa;">Builder + Adapter</td>
+          <td style="padding:10px 12px;border:1px solid var(--border);background:rgba(56,189,248,0.05);font-size:11px;color:#bae6fd;">Implement: QueryBuilder + Legacy API Adapter</td>
+          <td style="padding:10px 12px;border:1px solid var(--border);background:rgba(74,222,128,0.05);font-size:11px;color:#bbf7d0;">Review: Fluent API design with Builder</td>
+          <td style="padding:10px 12px;border:1px solid var(--border);background:rgba(168,85,247,0.08);font-size:11px;color:#d8b4fe;">HTTP Request Builder + third-party payment adapter</td>
+        </tr>
+        <tr>
+          <td style="padding:10px 12px;border:1px solid var(--border);font-size:11px;color:var(--mentor);font-weight:700;">Wk 8</td>
+          <td style="padding:10px 12px;border:1px solid var(--border);background:rgba(249,115,22,0.05);font-size:11px;color:#fed7aa;">Decorator + Facade</td>
+          <td style="padding:10px 12px;border:1px solid var(--border);background:rgba(56,189,248,0.05);font-size:11px;color:#bae6fd;">Implement: Logging+Caching decorators for IOrderService</td>
+          <td style="padding:10px 12px;border:1px solid var(--border);background:rgba(74,222,128,0.05);font-size:11px;color:#bbf7d0;">Review: ASP.NET Core middleware = Decorator in disguise</td>
+          <td style="padding:10px 12px;border:1px solid var(--border);background:rgba(168,85,247,0.08);font-size:11px;color:#d8b4fe;">Order processing Facade over 4 services</td>
+        </tr>
+        <tr>
+          <td style="padding:10px 12px;border:1px solid var(--border);font-size:11px;color:var(--mentor);font-weight:700;">Wk 9</td>
+          <td style="padding:10px 12px;border:1px solid var(--border);background:rgba(249,115,22,0.05);font-size:11px;color:#fed7aa;">Strategy + Observer</td>
+          <td style="padding:10px 12px;border:1px solid var(--border);background:rgba(56,189,248,0.05);font-size:11px;color:#bae6fd;">Implement: Sorting strategies + Stock price events</td>
+          <td style="padding:10px 12px;border:1px solid var(--border);background:rgba(74,222,128,0.05);font-size:11px;color:#bbf7d0;">Review: C# events as built-in Observer</td>
+          <td style="padding:10px 12px;border:1px solid var(--border);background:rgba(168,85,247,0.08);font-size:11px;color:#d8b4fe;">Order lifecycle with Strategy pricing + Observer notifications</td>
+        </tr>
+        <tr>
+          <td style="padding:10px 12px;border:1px solid var(--border);font-size:11px;color:var(--mentor);font-weight:700;">Wk 10</td>
+          <td style="padding:10px 12px;border:1px solid var(--border);background:rgba(249,115,22,0.05);font-size:11px;color:#fed7aa;">Command + State + Template Method</td>
+          <td style="padding:10px 12px;border:1px solid var(--border);background:rgba(56,189,248,0.05);font-size:11px;color:#bae6fd;">Implement: Undo system + Order state machine</td>
+          <td style="padding:10px 12px;border:1px solid var(--border);background:rgba(74,222,128,0.05);font-size:11px;color:#bbf7d0;">Review: Patterns consolidation — name signal for each</td>
+          <td style="padding:10px 12px;border:1px solid var(--border);background:rgba(168,85,247,0.08);font-size:11px;color:#d8b4fe;">Capstone: LoggingFramework using 4 patterns. Full implementation.</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="week-phase">
+      <div class="week-phase-title">Phases 4 & 5 · LLD Problems + Interview Mastery — Weeks 11–16</div>
+      <table style="width:100%;border-collapse:collapse;border:1px solid var(--border);">
+        <tr>
+          <td style="padding:8px 12px;border:1px solid var(--border);background:var(--surface2);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text3);">Week</td>
+          <td style="padding:8px 12px;border:1px solid var(--border);background:var(--surface2);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text3);">Mon–Tue: Study + Plan</td>
+          <td style="padding:8px 12px;border:1px solid var(--border);background:var(--surface2);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text3);">Wed–Thu: Code</td>
+          <td style="padding:8px 12px;border:1px solid var(--border);background:var(--surface2);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text3);">Fri: Review</td>
+          <td style="padding:8px 12px;border:1px solid var(--border);background:var(--surface2);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text3);">Sat: Mock or Deep Work</td>
+        </tr>
+        <tr><td style="padding:10px 12px;border:1px solid var(--border);font-size:11px;color:var(--mentor);font-weight:700;">Wk 11</td><td style="padding:10px 12px;border:1px solid var(--border);background:rgba(249,115,22,0.05);font-size:11px;color:#fed7aa;">Parking Lot: Steps 1–4 (requirements, entities, relationships, patterns) — on paper</td><td style="padding:10px 12px;border:1px solid var(--border);background:rgba(56,189,248,0.05);font-size:11px;color:#bae6fd;">Parking Lot: Full C# implementation</td><td style="padding:10px 12px;border:1px solid var(--border);background:rgba(74,222,128,0.05);font-size:11px;color:#bbf7d0;">Review design. Journal 3 decisions + alternatives.</td><td style="padding:10px 12px;border:1px solid var(--border);background:rgba(168,85,247,0.08);font-size:11px;color:#d8b4fe;">Library Management System — timed attempt</td></tr>
+        <tr><td style="padding:10px 12px;border:1px solid var(--border);font-size:11px;color:var(--mentor);font-weight:700;">Wk 12</td><td style="padding:10px 12px;border:1px solid var(--border);background:rgba(249,115,22,0.05);font-size:11px;color:#fed7aa;">ATM Machine + Vending Machine: Paper design both</td><td style="padding:10px 12px;border:1px solid var(--border);background:rgba(56,189,248,0.05);font-size:11px;color:#bae6fd;">ATM: Full State pattern implementation</td><td style="padding:10px 12px;border:1px solid var(--border);background:rgba(74,222,128,0.05);font-size:11px;color:#bbf7d0;">Vending Machine: Implement core flow</td><td style="padding:10px 12px;border:1px solid var(--border);background:rgba(168,85,247,0.08);font-size:11px;color:#d8b4fe;">Rebuild Parking Lot from scratch. Target: 45 min total.</td></tr>
+        <tr><td style="padding:10px 12px;border:1px solid var(--border);font-size:11px;color:var(--mentor);font-weight:700;">Wk 13</td><td style="padding:10px 12px;border:1px solid var(--border);background:rgba(249,115,22,0.05);font-size:11px;color:#fed7aa;">Chess: Step 1–4 on paper. Focus on piece hierarchy.</td><td style="padding:10px 12px;border:1px solid var(--border);background:rgba(56,189,248,0.05);font-size:11px;color:#bae6fd;">Chess: Implement Piece hierarchy + Board + 3 pieces with moves</td><td style="padding:10px 12px;border:1px solid var(--border);background:rgba(74,222,128,0.05);font-size:11px;color:#bbf7d0;">Chess: Add Command pattern for move history + undo</td><td style="padding:10px 12px;border:1px solid var(--border);background:rgba(168,85,247,0.08);font-size:11px;color:#d8b4fe;">BookMyShow: Full design + core implementation</td></tr>
+        <tr><td style="padding:10px 12px;border:1px solid var(--border);font-size:11px;color:var(--mentor);font-weight:700;">Wk 14</td><td style="padding:10px 12px;border:1px solid var(--border);background:rgba(249,115,22,0.05);font-size:11px;color:#fed7aa;">Food Delivery system design. Elevator system design.</td><td style="padding:10px 12px;border:1px solid var(--border);background:rgba(56,189,248,0.05);font-size:11px;color:#bae6fd;">Implement Elevator with Strategy for scheduling algorithm</td><td style="padding:10px 12px;border:1px solid var(--border);background:rgba(74,222,128,0.05);font-size:11px;color:#bbf7d0;">Splitwise: Paper design — hardest problem, no pressure</td><td style="padding:10px 12px;border:1px solid var(--border);background:rgba(168,85,247,0.08);font-size:11px;color:#d8b4fe;">Phase 4 exit test: Chess cold (45 min). Journal assessment.</td></tr>
+        <tr><td style="padding:10px 12px;border:1px solid var(--border);font-size:11px;color:var(--mentor);font-weight:700;">Wk 15</td><td style="padding:10px 12px;border:1px solid var(--border);background:rgba(249,115,22,0.05);font-size:11px;color:#fed7aa;">Study: Interview communication patterns. Script your opening.</td><td style="padding:10px 12px;border:1px solid var(--border);background:rgba(168,85,247,0.08);font-size:11px;color:#d8b4fe;">Mock #1: Vending Machine (timed, self-recorded)</td><td style="padding:10px 12px;border:1px solid var(--border);background:rgba(168,85,247,0.08);font-size:11px;color:#d8b4fe;">Mock #2: Elevator System</td><td style="padding:10px 12px;border:1px solid var(--border);background:rgba(168,85,247,0.08);font-size:11px;color:#d8b4fe;">Mock #3: Peer mock on Pramp — BookMyShow or Notification</td></tr>
+        <tr><td style="padding:10px 12px;border:1px solid var(--border);font-size:11px;color:var(--mentor);font-weight:700;">Wk 16</td><td style="padding:10px 12px;border:1px solid var(--border);background:rgba(249,115,22,0.05);font-size:11px;color:#fed7aa;">Review all mock recordings. Identify 3 patterns to improve.</td><td style="padding:10px 12px;border:1px solid var(--border);background:rgba(168,85,247,0.08);font-size:11px;color:#d8b4fe;">Mock #4: New unseen problem (ask Claude or Pramp)</td><td style="padding:10px 12px;border:1px solid var(--border);background:rgba(168,85,247,0.08);font-size:11px;color:#d8b4fe;">Mock #5: Full 45-min interview simulation</td><td style="padding:10px 12px;border:1px solid var(--border);background:rgba(168,85,247,0.08);font-size:11px;color:#d8b4fe;">Final: Chess from scratch, recorded. This is your baseline proof of mastery.</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ SECTION 07: MISTAKES ══════ -->
+<section class="section" id="mistakes">
+  <div class="section-eyebrow">Learn From Others' Failures</div>
+  <div class="section-title">The 10 Mistakes That Kill LLD Prep</div>
+  <div class="section-lead">I've seen smart engineers fail LLD interviews not because they lacked knowledge, but because of specific, fixable habits. Here are the most common ones — and how to avoid them.</div>
+
+  <div class="mentor-says">
+    <p>Read these once. Then come back and read them again after Week 8. You'll recognise yourself in at least 3 of them. That recognition is valuable — most engineers don't become aware of these patterns until an interviewer's feedback reveals them.</p>
+  </div>
+
+  <div class="tip-grid">
+    <div class="tip-card">
+      <div class="tip-n">01</div>
+      <div class="tip-title">Memorising patterns, not recognising them</div>
+      <div class="tip-body">You can recite "Singleton ensures one instance" but freeze when asked "how would you ensure only one database connection pool?" Same concept, different framing. Fix: for each pattern, write 5 different real-world scenarios where you'd apply it.</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-n">02</div>
+      <div class="tip-title">Coding without designing</div>
+      <div class="tip-body">Opening VS Code before thinking about entities and relationships. The result: messy code that doesn't reflect a coherent design. Fix: enforce a rule — no IDE until paper design is complete. Every time, even for small problems.</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-n">03</div>
+      <div class="tip-title">Over-engineering with too many patterns</div>
+      <div class="tip-body">Using 6 patterns in a Parking Lot to "show knowledge". Interviewers see this and think "over-engineered, would add complexity to a real codebase." Fix: use patterns only where they solve a real problem you can articulate. One forced pattern tanks your score more than zero patterns.</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-n">04</div>
+      <div class="tip-title">Not asking clarifying questions</div>
+      <div class="tip-body">"I'll just design the general case." Engineers who do this either miss key requirements or design something too complex. Asking questions signals maturity. Skipping them signals overconfidence or unpreparedness. Fix: always ask at least 3 questions before touching the design.</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-n">05</div>
+      <div class="tip-title">Designing silently</div>
+      <div class="tip-body">Staring at the whiteboard/screen and thinking without speaking. The interviewer can't see your reasoning — they only see the output. Fix: narrate everything. "I'm thinking about whether Vehicle should be abstract or an interface. I'm going with abstract because I want to share the plate number property across all types..."</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-n">06</div>
+      <div class="tip-title">Ignoring edge cases</div>
+      <div class="tip-body">Happy-path-only design. What happens when a user tries to withdraw more than their balance? When a spot is double-booked? When an elevator request comes from a non-existent floor? Fix: after your initial design, explicitly ask "what are 3 edge cases this design handles or doesn't handle?"</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-n">07</div>
+      <div class="tip-title">Passive reading without implementation</div>
+      <div class="tip-body">Reading about patterns and thinking "I get it" without writing code. You don't get it until your fingers produce it without help. Fix: close every resource after reading a concept. Open IDE. Implement from memory. If you can't — you haven't learned it yet.</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-n">08</div>
+      <div class="tip-title">Never doing mock interviews until late</div>
+      <div class="tip-body">"I'll start mocks when I'm ready." You're never ready until you've done mocks. The performance layer — talking while designing under time pressure — is a completely separate skill you can only build by doing it. Fix: start mocks at Week 11, not Week 15.</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-n">09</div>
+      <div class="tip-title">Rebuilding the same 3 problems forever</div>
+      <div class="tip-body">Doing Parking Lot 10 times because it feels safe. You're optimising for comfort, not growth. Fix: once you can do a problem in 45 minutes clean, move to a harder one. New problems force genuine generalisation of design thinking. Return to old ones for speed drills only.</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-n">10</div>
+      <div class="tip-title">Not reviewing what went wrong</div>
+      <div class="tip-body">Finishing a practice session and moving on without reflection. You'll make the same mistakes next time. Fix: after every practice session — 5 minutes of journaling. What design choice was wrong? What would I do differently? What question should I have asked at the start?</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ SECTION 08: CHECKLIST ══════ -->
+<section class="section" id="checklist">
+  <div class="section-eyebrow">Track Everything</div>
+  <div class="section-title">Master Progress Checklist</div>
+  <div class="section-lead">Click each item to mark it done. This is your honest mirror. If a section has been half-done for 2 weeks, that's where you need to focus. Don't move forward while leaving gaps behind.</div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:36px;margin-top:8px;">
+
+    <div>
+      <div style="font-family:var(--serif);font-size:18px;margin-bottom:4px;">Setup</div>
+      <div style="font-size:10px;color:var(--text3);margin-bottom:16px;">Before you start</div>
+      <ul class="check-list">
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">LLDMastery .NET solution created with 4 projects</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">xUnit test project added and running</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">Design journal started (Notion / text file)</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">Study schedule blocked in calendar (90 min/day)</div></li>
+      </ul>
+    </div>
+
+    <div>
+      <div style="font-family:var(--serif);font-size:18px;margin-bottom:4px;">OOP Foundations</div>
+      <div style="font-size:10px;color:var(--text3);margin-bottom:16px;">Weeks 1–3</div>
+      <ul class="check-list">
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">BankAccount: bad→good encapsulation + 3 failing tests</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">IPaymentProcessor + 3 implementations + CheckoutService</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">Shape hierarchy with correct abstract class usage</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">TaxCalculator: if-else chain → polymorphism refactor</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">Stack: inheritance violation → composition fix</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">University model: correct assoc/aggregation/composition</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">NotificationSystem capstone — from scratch in 30 min</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">Phase 1 exit test passed — all 4 pillars from memory</div></li>
+      </ul>
+    </div>
+
+    <div>
+      <div style="font-family:var(--serif);font-size:18px;margin-bottom:4px;">SOLID Principles</div>
+      <div style="font-size:10px;color:var(--text3);margin-bottom:16px;">Weeks 4–5</div>
+      <ul class="check-list">
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">SRP: UserService refactored into 4 focused classes</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">OCP: Discount engine — add new type without changing existing</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">LSP: Square/Rectangle failing test written and fixed</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">ISP: IMultiFunctionDevice split into 3 narrow interfaces</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">DIP: OrderService refactored with constructor injection + unit test</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">Ascendion codebase: identified + fixed 1 real SOLID violation</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">Phase 2 exit test: identify violations in 5 min cold</div></li>
+      </ul>
+    </div>
+
+    <div>
+      <div style="font-family:var(--serif);font-size:18px;margin-bottom:4px;">Design Patterns</div>
+      <div style="font-size:10px;color:var(--text3);margin-bottom:16px;">Weeks 6–10</div>
+      <ul class="check-list">
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">Singleton: thread-safe Lazy&lt;T&gt; + concurrent test</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">Factory Method: NotificationFactory with DI</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">Builder: fluent QueryBuilder or HttpRequestBuilder</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">Adapter: wrapping a legacy/3rd party interface</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">Decorator: logging + caching chain on IOrderService</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">Facade: single entry point over complex subsystem</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">Strategy: sortable, with runtime strategy swap + test</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">Observer: C# events + IObservable&lt;T&gt; version</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">Command: with undo/redo capability</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">State: Order state machine — all transitions covered</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">Composite: tree structure with uniform leaf/branch treatment</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">Template Method: data import pipeline with variation points</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">LoggingFramework capstone — 4 patterns together</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">Phase 3 exit: name signal smell for all 8 must-know patterns</div></li>
+      </ul>
+    </div>
+
+    <div>
+      <div style="font-family:var(--serif);font-size:18px;margin-bottom:4px;">LLD Practice Problems</div>
+      <div style="font-size:10px;color:var(--text3);margin-bottom:16px;">Weeks 11–14</div>
+      <ul class="check-list">
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">5-step process memorised and practiced 3+ times</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">Parking Lot: full implementation + design journal entry</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">Library Management System: complete</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">ATM Machine: State pattern implementation</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">Vending Machine: complete</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">Elevator System: Strategy for scheduling</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">Chess: hierarchy + Command + Observer</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">BookMyShow: concurrency + Facade</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">Parking Lot rebuilt cold in under 45 min</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">Phase 4 exit: Chess cold in 45 min with journal assessment</div></li>
+      </ul>
+    </div>
+
+    <div>
+      <div style="font-family:var(--serif);font-size:18px;margin-bottom:4px;">Interview Readiness</div>
+      <div style="font-size:10px;color:var(--text3);margin-bottom:16px;">Weeks 15–16</div>
+      <ul class="check-list">
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">Opening script practiced: clarifying questions first</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">Mock #1: Vending Machine — timed, self-recorded</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">Mock #2: Elevator — reviewed and improved</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">Mock #3: Peer mock on Pramp</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">Mock #4: Unseen problem — no hints</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">Mock #5: Full 45-min simulation</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">Final: Chess recorded — proof of mastery</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">Can explain 5 SOLID principles with examples, no notes</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">Can name signal smells for all 8 must-know patterns</div></li>
+        <li class="check-item" onclick="tick(this)"><div class="check-box-new"></div><div class="check-text-new">Applied for at least 3 target companies</div></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div id="progress-panel" style="margin-top:48px;padding:28px 32px;background:var(--surface);border:1px solid var(--border);border-radius:10px;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;margin-bottom:20px;">
+      <div>
+        <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:4px;">Overall Progress</div>
+        <div style="font-family:var(--serif);font-size:48px;color:var(--success);line-height:1;" id="pct-display">0%</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:4px;"><span id="done-count">0</span> of <span id="total-count">0</span> items complete</div>
+      </div>
+      <div style="font-size:12px;color:var(--text2);max-width:320px;line-height:1.7;">Keep going. Each checked item is real evidence of your growth. The checklist doesn't lie — it shows you exactly where you are.</div>
+    </div>
+    <div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden;">
+      <div id="main-progress-bar" style="height:100%;background:linear-gradient(to right, var(--mentor), var(--success));border-radius:4px;width:0%;transition:width 0.5s ease;"></div>
+    </div>
+  </div>
+
+  <div class="mentor-says" style="margin-top:40px;">
+    <p>When you complete this checklist, you will be a genuinely strong LLD candidate — not just someone who read about it. The difference will be evident in every interview you take, every code review you give, and every system you design at Ascendion and beyond.</p>
+    <p>LLD mastery is not a destination. It's a way of thinking that, once built, never leaves. Every time you write a new class, you'll ask: "Does this have one responsibility? Is it open to extension? Am I depending on abstractions?" <strong>That instinct — that's what we've been building all along.</strong></p>
+  </div>
+</section>
+
+</main>
+</div>
+
+<!-- PROGRESS WIDGET -->
+<div class="progress-widget">
+  <div class="pw-label">Your Progress</div>
+  <div class="pw-pct" id="widget-pct">0%</div>
+  <div class="pw-track"><div class="pw-fill" id="widget-bar"></div></div>
+  <div class="pw-sub" id="widget-sub">0 of 0 items</div>
+</div>
+
+<!-- Firebase SDKs -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getDatabase, ref, set, onValue } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+
+// ─────────────────────────────────────────────
+// 🔧 PASTE YOUR FIREBASE CONFIG HERE
+// Steps: console.firebase.google.com → New Project
+// → Add Web App → Copy config object below
+// ─────────────────────────────────────────────
+const firebaseConfig = {
+  apiKey: "AIzaSyCPP95dOfey88PShQWLXYhZWHoMJKjU678",
+  authDomain: "lld-mentor-sai.firebaseapp.com",
+  databaseURL: "https://lld-mentor-sai-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "lld-mentor-sai",
+  storageBucket: "lld-mentor-sai.firebasestorage.app",
+  messagingSenderId: "23775866316",
+  appId: "1:23775866316:web:3349a17448e77e8a2e8169",
+  measurementId: "G-FDGT5LJ46G"
+};
+
+const app  = initializeApp(firebaseConfig);
+const db   = getDatabase(app);
+const auth = getAuth(app);
+
+// ── State ──────────────────────────────────────
+let checkedState = {};   // { itemKey: true/false }
+let currentUid   = null;
+let saveTimeout  = null;
+
+// ── Key each checklist item by its text content ─
+function getItemKey(item) {
+  const txt = item.querySelector('.check-text-new')?.textContent?.trim() || '';
+  return txt.replace(/[^a-zA-Z0-9]/g, '_').slice(0, 80);
+}
+
+// ── Apply saved state to DOM ───────────────────
+function applyState(state) {
+  document.querySelectorAll('.check-item').forEach(item => {
+    const k   = getItemKey(item);
+    const box = item.querySelector('.check-box-new');
+    const txt = item.querySelector('.check-text-new');
+    if (state[k]) {
+      box.classList.add('done');
+      txt.classList.add('done');
+    } else {
+      box.classList.remove('done');
+      txt.classList.remove('done');
+    }
+  });
+  updateProgress();
+}
+
+// ── Save to Firebase (debounced 800ms) ──────────
+function scheduleSave() {
+  if (!currentUid) return;
+  clearTimeout(saveTimeout);
+  saveTimeout = setTimeout(() => {
+    set(ref(db, `users/${currentUid}/checklist`), checkedState)
+      .then(() => showSyncStatus('✓ Synced', '#4ade80'))
+      .catch(() => showSyncStatus('⚠ Sync failed', '#f87171'));
+  }, 800);
+}
+
+// ── Load from Firebase ───────────────────────
+function loadFromFirebase(uid) {
+  onValue(ref(db, `users/${uid}/checklist`), snap => {
+    const data = snap.val() || {};
+    checkedState = data;
+    applyState(data);
+    showSyncStatus('✓ Loaded', '#4ade80');
+  });
+}
+
+// ── Tick handler (replaces old tick()) ──────────
+window.tick = function(item) {
+  const box = item.querySelector('.check-box-new');
+  const txt = item.querySelector('.check-text-new');
+  box.classList.toggle('done');
+  txt.classList.toggle('done');
+  const k = getItemKey(item);
+  checkedState[k] = box.classList.contains('done');
+  updateProgress();
+  if (currentUid) {
+    scheduleSave();
+  } else {
+    showSyncStatus('⚠ Not signed in — progress not saved', '#facc15');
+  }
+};
+
+// ── Progress display ────────────────────────────
+window.updateProgress = function() {
+  const all   = document.querySelectorAll('.check-box-new');
+  const done  = document.querySelectorAll('.check-box-new.done');
+  const total = all.length;
+  const count = done.length;
+  const pct   = total > 0 ? Math.round(count / total * 100) : 0;
+
+  const safeSet = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  const safeW   = (id, val) => { const el = document.getElementById(id); if (el) el.style.width  = val; };
+
+  safeSet('pct-display',  pct + '%');
+  safeSet('done-count',   count);
+  safeSet('total-count',  total);
+  safeW  ('main-progress-bar', pct + '%');
+  safeSet('widget-pct',   pct + '%');
+  safeW  ('widget-bar',   pct + '%');
+  safeSet('widget-sub',   count + ' of ' + total + ' items');
+};
+
+// ── Sync status badge ───────────────────────────
+function showSyncStatus(msg, color) {
+  const el = document.getElementById('sync-status');
+  if (!el) return;
+  el.textContent = msg;
+  el.style.color = color;
+  el.style.opacity = '1';
+  clearTimeout(el._t);
+  el._t = setTimeout(() => { el.style.opacity = '0'; }, 3000);
+}
+
+// ── Auth state listener ─────────────────────────
+onAuthStateChanged(auth, user => {
+  if (user) {
+    currentUid = user.uid;
+    showAuthPanel(false);
+    document.getElementById('user-email-display').textContent = user.email;
+    document.getElementById('auth-status-bar').style.display = 'flex';
+    loadFromFirebase(user.uid);
+  } else {
+    currentUid = null;
+    showAuthPanel(true);
+    document.getElementById('auth-status-bar').style.display = 'none';
+    checkedState = {};
+    applyState({});
+  }
+});
+
+// ── Sign in ─────────────────────────────────────
+window.doSignIn = function() {
+  const email = document.getElementById('auth-email').value.trim();
+  const pass  = document.getElementById('auth-pass').value;
+  const errEl = document.getElementById('auth-error');
+  errEl.textContent = '';
+  signInWithEmailAndPassword(auth, email, pass)
+    .catch(e => { errEl.textContent = friendlyError(e.code); });
+};
+
+// ── Sign up ─────────────────────────────────────
+window.doSignUp = function() {
+  const email = document.getElementById('auth-email').value.trim();
+  const pass  = document.getElementById('auth-pass').value;
+  const errEl = document.getElementById('auth-error');
+  errEl.textContent = '';
+  if (pass.length < 6) { errEl.textContent = 'Password must be 6+ characters'; return; }
+  createUserWithEmailAndPassword(auth, email, pass)
+    .catch(e => { errEl.textContent = friendlyError(e.code); });
+};
+
+// ── Sign out ─────────────────────────────────────
+window.doSignOut = function() {
+  signOut(auth);
+};
+
+function friendlyError(code) {
+  const m = {
+    'auth/user-not-found':    'No account with that email. Use Sign Up.',
+    'auth/wrong-password':    'Wrong password. Try again.',
+    'auth/email-already-in-use': 'Email already registered. Sign In instead.',
+    'auth/invalid-email':     'Invalid email address.',
+    'auth/network-request-failed': 'Network error. Check your connection.',
+  };
+  return m[code] || 'Error: ' + code;
+}
+
+function showAuthPanel(show) {
+  const panel = document.getElementById('auth-panel');
+  if (panel) panel.style.display = show ? 'flex' : 'none';
+}
+
+// ── Non-auth functions (quiz, nav, scroll) ──────
+window.addEventListener('scroll', () => {
+  const winH = window.innerHeight;
+  const docH = document.documentElement.scrollHeight - winH;
+  document.getElementById('readingBar').style.width = (window.scrollY / docH * 100) + '%';
+});
+
+const sections = document.querySelectorAll('section[id]');
+window.addEventListener('scroll', () => {
+  let cur = '';
+  sections.forEach(s => { if (window.scrollY >= s.offsetTop - 200) cur = s.id; });
+  document.querySelectorAll('.nav-item').forEach(n => {
+    n.classList.remove('active');
+    if (n.getAttribute('href') === '#' + cur) n.classList.add('active');
+  });
+});
+
+window.setActive = function(el) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+};
+
+window.toggleQuiz = function(el) {
+  const ans = el.nextElementSibling;
+  const isOpen = el.classList.contains('open');
+  document.querySelectorAll('.quiz-q.open').forEach(q => {
+    q.classList.remove('open');
+    q.nextElementSibling.style.display = 'none';
+  });
+  if (!isOpen) { el.classList.add('open'); ans.style.display = 'block'; }
+};
+
+// Init
+document.addEventListener('DOMContentLoaded', updateProgress);
+updateProgress();
+</script>
+</body>
+</html>
