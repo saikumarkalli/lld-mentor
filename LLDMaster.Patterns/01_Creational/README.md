@@ -75,7 +75,7 @@ IInvoiceGenerator inv   = factory.CreateInvoiceGenerator(); // DomesticInvoice
 
 | File | Pattern | What it demonstrates |
 |------|---------|---------------------|
-| [01_CartSessionManager.cs](01_Singleton/01_CartSessionManager.cs) | **Singleton** | 4 C# flavours: `volatile+lock`, `Lazy<T>`, static field, DI `AddSingleton()` |
+| [01_PaymentConfigManager.cs](01_Singleton/01_PaymentConfigManager.cs) | **Singleton** | 4 C# flavours: `volatile+lock`, `Lazy<T>`, static field, DI `AddSingleton()` |
 | [02_PaymentGatewayFactory.cs](02_FactoryMethod/02_PaymentGatewayFactory.cs) | **Factory Method** | Dictionary registry, extensible without touching existing code |
 | [03_PaymentProviderAbstractFactory.cs](03_AbstractFactory/03_PaymentProviderAbstractFactory.cs) | **Abstract Factory** | Domestic vs International payment families, family consistency |
 | [04_PaymentRequestBuilder.cs](04_Builder/04_PaymentRequestBuilder.cs) | **Builder** | Fluent API, `Build()` validation, immutable `record`, Director class |

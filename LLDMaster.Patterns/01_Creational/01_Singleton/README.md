@@ -12,18 +12,16 @@ Singleton ensures that **only one instance** of a class exists for the lifetime 
 
 ## 🎯 The Problem It Solves
 
-`CartSessionManager` holds a user's cart state in memory. If two parts of the app each do `new CartSessionManager()`, they get **different objects** — adding an item in one place doesn't show up in another. The cart silently empties. This is a real production bug.
+`PaymentConfigManager` holds Stripe/PayPal API keys loaded from environment. If two services each do `new PaymentConfigManager()`, they get **different objects** — one may have stale keys after a rotation, causing silent auth failures. This is a real production bug.
 
 ```csharp
-// BUG — two separate objects, two separate cart states
-var cart1 = new CartSessionManager();
-cart1.AddItem("Laptop");
-
-var cart2 = new CartSessionManager();
-cart2.GetItems(); // returns [] — Laptop is gone!
+// BUG — two separate objects, two separate config loads
+var configA = new NaivePaymentConfigManager();  // loads from env
+var configB = new NaivePaymentConfigManager();  // loads again — separate object
+// If Stripe rotates keys mid-session, configA and configB can diverge → auth failures
 ```
 
-Singleton fixes this: `CartSessionManager.Instance` always returns the **same object**.
+Singleton fixes this: `PaymentConfigManager.Instance` always returns the **same object**.
 
 ---
 
@@ -70,18 +68,18 @@ Three approaches, each valid:
 
 ```csharp
 // ✅ Option 1: Lazy<T> — PREFERRED in .NET 8+
-private static readonly Lazy<CartSessionManager> _lazy = new(() => new());
-public static CartSessionManager Instance => _lazy.Value;
+private static readonly Lazy<ExchangeRateCache> _lazy = new(() => new());
+public static ExchangeRateCache Instance => _lazy.Value;
 // Lazy<T> with default LazyThreadSafetyMode.ExecutionAndPublication = thread-safe + lazy
 
 // ✅ Option 2: Static field initialiser (eager, but CLR guarantees thread-safety)
-private static readonly CartSessionManager _instance = new();
-public static CartSessionManager Instance => _instance;
+private static readonly PaymentAuditLogger _instance = new();
+public static PaymentAuditLogger Instance => _instance;
 
 // ✅ Option 3: Double-checked locking (classic, verbose)
-private static volatile CartSessionManager? _instance;
+private static volatile PaymentConfigManager? _instance;
 private static readonly object _lock = new();
-public static CartSessionManager Instance {
+public static PaymentConfigManager Instance {
     get {
         if (_instance is null) lock (_lock) { _instance ??= new(); }
         return _instance;
@@ -92,7 +90,7 @@ public static CartSessionManager Instance {
 
 ### Q2: "What's the problem with Singleton in unit tests?"
 
-Tests **share state** from the previous test. If test 1 adds items to the cart and test 2 expects an empty cart — it fails. You can't reset a static Singleton between tests.
+Tests **share state** from the previous test. If test 1 logs audit entries and test 2 expects an empty log — it fails. You can't reset a static Singleton between tests.
 
 **Solution**: Use the **DI-friendly Singleton** (`services.AddSingleton<ICartSession, CartSession>()`). The DI container can be reset per test.
 
@@ -132,10 +130,10 @@ This is preferred over static `Instance` because the class is **testable** (you 
 
 ## 📂 File in This Folder
 
-**[01_CartSessionManager.cs](01_CartSessionManager.cs)** — Contains 4 implementations:
-- `CartSessionManagerV1` — double-checked locking with `volatile`
-- `CartSessionManagerV2` — `Lazy<T>` (preferred)
-- `CartSessionManagerV3` — static field (eager)
+**[01_PaymentConfigManager.cs](01_PaymentConfigManager.cs)** — Contains 4 implementations:
+- `PaymentConfigManager` — double-checked locking with `volatile` (Stripe/PayPal API keys)
+- `ExchangeRateCache` — `Lazy<T>` (preferred) (USD/EUR/GBP → INR rates)
+- `PaymentAuditLogger` — static field (eager) (append-only payment event log)
 - `ICartSession` + `CartSession` — DI-friendly (production recommended)
 
 ---

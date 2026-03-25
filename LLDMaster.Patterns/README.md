@@ -33,7 +33,7 @@ The GoF book (Gang of Four, 1994) catalogued 23 recurring object-oriented design
 
 | # | Pattern | Category | Payment Domain Example | One-Line Purpose |
 |---|---------|----------|------------------------|-----------------|
-| 01 | [Singleton](01_Creational/01_Singleton/) | Creational | `CartSessionManager` | One shared instance, global access |
+| 01 | [Singleton](01_Creational/01_Singleton/) | Creational | `PaymentConfigManager` | One shared instance, global access |
 | 02 | [Factory Method](01_Creational/02_FactoryMethod/) | Creational | `PaymentGatewayFactory` | Delegate object creation, stay Open/Closed |
 | 03 | [Abstract Factory](01_Creational/03_AbstractFactory/) | Creational | `PaymentProviderFactory` | Create families of related objects together |
 | 04 | [Builder](01_Creational/04_Builder/) | Creational | `PaymentRequestBuilder` | Build complex objects step-by-step, fluently |
@@ -61,7 +61,7 @@ LLDMaster.Patterns/
 │   ├── README.md                              ← category overview + comparison table
 │   ├── 01_Singleton/
 │   │   ├── README.md                          ← interview prep for this pattern
-│   │   └── 01_CartSessionManager.cs
+│   │   └── 01_PaymentConfigManager.cs
 │   ├── 02_FactoryMethod/
 │   │   ├── README.md
 │   │   └── 02_PaymentGatewayFactory.cs
