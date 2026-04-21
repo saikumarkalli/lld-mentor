@@ -137,7 +137,36 @@ internal class StripeResponseParser
 - What modifier would you use for a base class method you want only leaf classes in your own library to override, but not external consumers?
   *(`private protected` — accessible only to derived classes within the same assembly)*
 - Why do interfaces have all-public members by default? (pre C# 8)
+  *(Because an interface is a **contract meant to be consumed by anyone** — it defines what callers can do. Making interface members anything other than public would defeat the purpose: a private interface method would be invisible to implementors, and an internal one would break cross-assembly usage. Pre-C# 8, the only valid option was public, so the language just made it the implicit default.)*
+
 - What is a **default interface method** (C# 8) and what modifier does it use?
+  *(A **default interface method** is a method defined directly in an interface with a body — an implementation. It uses `public` visibility by default. Its main purpose is **backward compatibility**: you can add a new method to an existing interface without breaking all existing implementors — they inherit the default behaviour unless they choose to override it.)*
+
+  ```csharp
+  public interface ILogger
+  {
+      void Log(string message);
+
+      // Default interface method — C# 8+
+      // Existing ILogger implementors don't need to change — they get this for free
+      void LogError(string message) => Log($"[ERROR] {message}");
+  }
+
+  // Old implementor: still compiles, gets LogError for free
+  public class ConsoleLogger : ILogger
+  {
+      public void Log(string message) => Console.WriteLine(message);
+      // LogError inherited from interface — no change needed
+  }
+
+  // New implementor: can override if needed
+  public class FileLogger : ILogger
+  {
+      public void Log(string message) => File.AppendAllText("log.txt", message);
+      public void LogError(string message) => Log($"[CRITICAL] {message}"); // Custom override
+  }
+  ```
+  > ⚠️ Use sparingly — if you find yourself adding many default methods, the interface is growing into an abstract class. Prefer splitting into a new interface instead.
 
 ---
 

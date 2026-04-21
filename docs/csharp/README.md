@@ -28,10 +28,14 @@ docs/csharp/
 | Boxing & Unboxing | covered in [value-vs-reference-types.md](./01-beginner/value-vs-reference-types.md) | ✅ |
 | Default Values & Nullable Types | [nullable-types.md](./01-beginner/nullable-types.md) | ✅ |
 | String vs StringBuilder | [string-vs-stringbuilder.md](./01-beginner/string-vs-stringbuilder.md) | ✅ |
-| Access Modifiers (internal, protected internal) | [access-modifiers.md](./01-beginner/access-modifiers.md) | ⬜ |
-| Collections — List, Dictionary, HashSet | [collections-overview.md](./01-beginner/collections-overview.md) | ⬜ |
+| Stack vs Heap Memory (deep dive) | [stack-vs-heap.md](./01-beginner/stack-vs-heap.md) | ✅ |
+| Types of Classes (abstract, sealed, static, partial…) | [types-of-class.md](./01-beginner/types-of-class.md) | ✅ |
+| Types of Constructors (default, parameterised, static, private…) | [types-of-constructors.md](./01-beginner/types-of-constructors.md) | ✅ |
+| Access Modifiers (internal, protected internal) | [access-modifiers.md](./01-beginner/access-modifiers.md) | ✅ |
+| Collections — List, Dictionary, HashSet | [collections-overview.md](./01-beginner/collections-overview.md) | ✅ |
 | IEnumerable vs ICollection vs IList vs IReadOnlyCollection | [collection-interfaces.md](./01-beginner/collection-interfaces.md) | ⬜ |
 | Control Flow Basics | [control-flow.md](./01-beginner/control-flow.md) | ⬜ |
+
 
 ---
 
