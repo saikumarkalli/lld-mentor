@@ -143,11 +143,19 @@ public async Task GetDataFixed()
 ## 4. Interview Questions
 
 1. **Does `async`/`await` create new threads?**
-   *(No — it efficiently reuses thread pool threads. No new threads created.)*
+   *No — `async`/`await` does not create threads. It reuses existing **thread pool** threads efficiently. When you `await` an I/O operation, the current thread is returned to the pool. When the I/O completes, a thread pool thread picks up and resumes your state machine. 100 concurrent async requests may only use ~10 active threads.*
+
 2. **What is `ConfigureAwait(false)` and when should you use it?**
+   *By default, `await` captures the current `SynchronizationContext` and resumes on it (e.g., the UI thread in WPF, or the ASP.NET request context pre-Core). `ConfigureAwait(false)` says "don't resume on the captured context — use any thread pool thread." Library code should always use it to avoid deadlocks in consumer apps and to improve throughput. Application code (controllers, event handlers) can skip it.*
+
 3. **What is the difference between `.Result`/`.Wait()` and `await`?**
+   *`.Result` and `.Wait()` are **synchronous blocks** — they hold the current thread hostage until the task completes. In contexts with a `SynchronizationContext` (UI thread, pre-Core ASP.NET), this causes a **deadlock**: the thread blocks waiting for the continuation that needs that same thread to resume. `await` is non-blocking — it releases the thread and schedules a callback. Rule: never mix `.Result`/`.Wait()` with async code.*
+
 4. **When should you use `ValueTask<T>` over `Task<T>`?**
+   *Use `ValueTask<T>` when the **synchronous path is common** — e.g., a cache lookup that usually returns without async work. `Task<T>` always allocates a heap object. `ValueTask<T>` is a struct and can complete synchronously with zero allocation in the common case. Don't use `ValueTask` if the method almost always actually goes async — the extra complexity isn't worth it.*
+
 5. **What happens if you call an async method without awaiting it?**
+   *The method starts executing synchronously up to the first `await`, then returns a `Task`. Without `await`, the caller doesn't observe the result and crucially **doesn't observe exceptions** — they're silently swallowed. The task completes in the background but any exception is lost unless you explicitly handle it (`.ContinueWith(t => ...)` or store and check the task). This is a common source of silent failures.*
 
 ---
 

@@ -168,10 +168,19 @@ public float SumSimd(ReadOnlySpan<float> values)
 ## 4. Interview Questions
 
 1. **How do you identify performance bottlenecks in a .NET application?**
+   *Start with measurement, not guessing. Use: (1) **BenchmarkDotNet** for micro-benchmarks — measures allocations and throughput with JIT warmup handled correctly, (2) **`dotnet-trace`** with CPU sampling or allocation events for production-like profiling, (3) **`dotnet-counters monitor`** to watch GC rates, CPU%, thread pool queue length in real time, (4) **Application Insights** or Prometheus for distributed tracing and request latency. The bottleneck is usually excessive allocations, I/O blocking, or lock contention — not the algorithmic code you'd guess.*
+
 2. **What is GC pressure and how do you reduce it?**
+   *GC pressure is when the Gen 0 heap fills up frequently, causing high-frequency collections that pause the application. It's caused by too many short-lived allocations in hot paths. Common fixes: (1) `ArrayPool<byte>.Shared.Rent()` instead of `new byte[]` for large buffers, (2) `ObjectPool<T>` for expensive reusable objects, (3) `Span<T>` and `stackalloc` to avoid heap allocation for temporary data, (4) `struct`/`record struct` for small frequently-created values, (5) `StringBuilder` instead of string concatenation in loops.*
+
 3. **What tools do you use to benchmark .NET code?**
+   *`BenchmarkDotNet` is the standard — it handles JIT warmup, multiple iterations, statistical analysis, and reports both time and memory allocations per operation. For allocations and GC events at the process level, `dotnet-trace` with `--clreventlevel` exposes allocation events. `dotnet-dump` captures heap snapshots for memory leak analysis. `dotnet-gcdump` is faster for just GC/heap state. Visual Studio Profiler and JetBrains dotTrace/dotMemory are excellent GUI alternatives.*
+
 4. **What is `ArrayPool<T>` and why is it used?**
+   *`ArrayPool<T>` is a shared pool of reusable arrays — you rent an array, use it, return it. `ArrayPool<byte>.Shared.Rent(4096)` gives you an existing array without allocating a new one on the heap. This is critical for I/O workloads where every request might otherwise allocate a 4KB or 64KB buffer. Without pooling, each request's buffers flood Gen 0, triggering rapid GC collections. With ArrayPool, those arrays are recycled and the GC is not involved.*
+
 5. **What is the difference between CPU-bound and memory-bound performance issues?**
+   *CPU-bound: the bottleneck is raw computation — algorithms doing too much work. Fix with parallelism (`Parallel.For`, PLINQ), better algorithms (O(n log n) vs O(n²)), or JIT-friendly patterns (inlining, SIMD). Memory-bound: the bottleneck is data access patterns — cache misses, excessive allocations, GC pauses. Fix with data locality (process arrays sequentially, not random access), smaller data structures (`struct` over `class`), and allocation reduction (Span, ArrayPool). Profiling tells you which category you're in.*
 
 ---
 

@@ -162,11 +162,19 @@ public class ProductService
 ## 4. Interview Questions
 
 1. **What is `Nullable<T>` and how is it different from a regular nullable reference type?**
+   *`Nullable<T>` (written as `int?`) is a **struct** that wraps a value type (`int`, `bool`, `DateTime`) to let it hold `null`. It has two internal fields: `_value` (the data) and `_hasValue` (a flag). A nullable reference type (`string?`) is different — it's purely a compile-time annotation. The reference itself can already be null at runtime; the `?` just tells the compiler to warn you about possible null dereferences.*
+
 2. **What is the difference between `null` and `default` for a nullable value type?**
+   *For `int? x`: `null` explicitly means "no value" (`_hasValue = false`). `default` also resolves to `null` for `int?` — both produce the same result. But for `int` (non-nullable), `default` is `0`. So for nullable types, `null` and `default` are equivalent; for non-nullable value types, `default` gives the zero value.*
+
 3. **What does enabling `<Nullable>enable</Nullable>` actually do at runtime?**
-   *(Nothing — it's compile-time analysis only. No runtime overhead.)*
+   *Nothing at runtime — zero performance overhead. It is purely a **compile-time static analysis** feature. It adds attributes to your assembly metadata that tools can read, but the IL and runtime behaviour are unchanged. All null safety is enforced at build time via warnings and errors.*
+
 4. **When would you use `??=` vs just `??`?**
+   *`??` returns a default if the left side is null, but doesn't change the variable. `??=` **assigns** the default to the variable if it's null — it's a shorthand for `if (x == null) x = value`. Use `??=` when you want to initialise a nullable field lazily: `_cache ??= LoadCache();`*
+
 5. **What is the null-forgiving operator `!` and when is it appropriate?**
+   *The `!` operator (`name!`) tells the compiler "I know this might look nullable, but trust me — it won't be null here." It suppresses the nullable warning without any runtime effect. Use it **only** when you have external knowledge the compiler can't see — like after a framework-guaranteed initialisation (`[Required]` properties after model binding). Avoid using it to silence warnings you haven't actually fixed.*
 
 ---
 

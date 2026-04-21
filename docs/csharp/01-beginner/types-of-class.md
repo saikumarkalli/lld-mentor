@@ -175,12 +175,19 @@ public class Outer
 ## 4. Interview Questions
 
 1. **What is the difference between an `abstract` class and a `sealed` class?**
+   *`abstract`: cannot be instantiated directly — it exists only to be subclassed. It can have abstract members that derived classes must implement. `sealed`: cannot be inherited — it is the final class in a hierarchy. They are opposites: abstract forces you to extend; sealed prevents extension.*
+
 2. **Can a `static` class implement an interface?**
-   *(No — it cannot be instantiated, so implementing an interface makes no sense.)*
+   *No. A static class cannot be instantiated and has no instance, so it makes no sense to implement an interface (which defines behaviour for instances). The compiler will give a compile error.*
+
 3. **Can a `sealed` class implement an interface or inherit from a class?**
-   *(Yes — `sealed` only prevents others from inheriting from it, not from it inheriting upward.)*
+   *Yes — `sealed` only prevents **other** classes from inheriting from it. The sealed class itself can freely implement interfaces and inherit from a base class. `sealed` restricts downward extension, not upward.*
+
 4. **What are partial classes primarily used for in real projects?**
+   *Primarily for keeping auto-generated code (EF Core scaffolded models, WinForms designer code, source-generated code) separate from hand-written code. The auto-generated file can be safely regenerated without overwriting your custom logic, since both parts compile into one class.*
+
 5. **Why does `sealed` help JIT performance?**
+   *When a class is sealed, the JIT knows there is only one possible implementation of its methods — no subclass can override them. This means virtual method calls can be **devirtualized** (replaced with direct calls), and small methods can be inlined. This skips the vtable lookup entirely, which matters in tight loops.*
 
 ---
 

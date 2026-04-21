@@ -121,10 +121,19 @@ internal class StripeResponseParser
 ## 4. Interview Questions
 
 1. **What is the difference between `protected` and `internal`?**
+   *`protected`: accessible in the declaring class **and any derived class** — regardless of which assembly they are in. `internal`: accessible to **any code in the same assembly** — regardless of whether it's derived. They solve different problems: protected is about inheritance hierarchy; internal is about assembly (project) boundaries.*
+
 2. **When would you use `protected internal` vs `private protected`?**
+   *`protected internal` = protected **OR** internal — accessible to derived classes anywhere AND to all code in the same assembly. `private protected` = protected **AND** internal — accessible only to derived classes that are also in the same assembly. Use `private protected` when you want a hook for internal subclasses only, hidden from external consumers.*
+
 3. **What is the default accessibility of a class member in C#?**
+   *`private`. If you write a field, method, or property inside a class without any modifier, it is `private` by default. For top-level types (classes, interfaces at namespace level), the default is `internal`.*
+
 4. **What is `InternalsVisibleTo` and when is it used?**
+   *It's an assembly-level attribute that grants another named assembly access to `internal` members: `[assembly: InternalsVisibleTo("MyProject.Tests")]`. The main use case is unit testing — your test project can access and test internal classes/methods without making them `public` and polluting your public API.*
+
 5. **Why is making everything `public` bad design?**
+   *Public members are your API contract — once published, callers depend on them and you can't change them without breaking those callers. Making everything public means: (1) no encapsulation — implementation details leak out, (2) no contract clarity — callers don't know what they should actually use, (3) harder to refactor — any internal change might break external consumers.*
 
 ---
 

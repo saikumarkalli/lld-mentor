@@ -143,10 +143,19 @@ public static void TokenizeWithSpan(ReadOnlySpan<char> input, char delimiter)
 ## 4. Interview Questions
 
 1. **What is `Span<T>` and what problem does it solve?**
+   *`Span<T>` is a **stack-only view** into a contiguous block of memory — an array, stack memory, or unmanaged memory — without copying it. Before Span, slicing a string (`Substring`) allocated a new string. Slicing an array gave you a new array. `Span<T>` lets you describe "elements 5 to 10" as a view — zero allocation, zero copy. It's essential for high-performance parsing and buffer processing.*
+
 2. **Why is `Span<T>` a `ref struct`? What limitations does that impose?**
+   *`ref struct` means the struct can only live on the **stack** — never on the heap. This restriction exists because `Span<T>` holds a pointer to memory that could be stack memory (from `stackalloc`), which the GC doesn't track. If a `Span` could live on the heap, it could outlive the stack frame its memory came from. Limitations: cannot be a class field, cannot be used in `async` methods (stack frames don't survive `await`), cannot implement interfaces, cannot be boxed.*
+
 3. **What is the difference between `Span<T>` and `Memory<T>`?**
+   *Both are windows into contiguous memory, but `Span<T>` is a `ref struct` (stack-only, fast) and `Memory<T>` is a regular struct (heap-safe, usable as class field and in async methods). Use `Span` for synchronous code. Convert to `Memory` when you need to pass the buffer across `await` boundaries or store it in a class. Call `memory.Span` inside synchronous sections to get back a `Span` for processing.*
+
 4. **What is `stackalloc` and why is it used with `Span<T>`?**
+   *`stackalloc` allocates memory on the current thread's **stack** rather than the heap — zero GC involvement. It's used for small temporary buffers (< ~1KB). Combined with `Span<T>`, the result is completely allocation-free: `Span<byte> buf = stackalloc byte[64]`. This is ideal for parsing or formatting small data. Use `Memory<T>` if the buffer needs to survive beyond the current stack frame.*
+
 5. **When would you use `ReadOnlySpan<char>` instead of `string`?**
+   *When processing or parsing a string without needing to allocate substrings. For example, tokenizing a CSV line: `ReadOnlySpan<char> line = input.AsSpan(); int comma = line.IndexOf(','); var first = line[..comma];` — no string allocation. Use `ReadOnlySpan<char>` in APIs that accept input to parse; they can then be called with either a string (`.AsSpan()`) or a span from a buffer with zero extra allocation.*
 
 ---
 

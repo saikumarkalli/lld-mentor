@@ -126,10 +126,19 @@ public class PluginLoader
 ## 4. Interview Questions
 
 1. **What is the difference between C# source code, IL, and native code?**
+   *C# source: what you write — high-level, type-safe, human-readable. IL (Intermediate Language): what the C# compiler (Roslyn) produces — a CPU-agnostic bytecode stored in `.dll`/`.exe` files. Native code: what the JIT compiler generates from IL at runtime — actual machine instructions your CPU executes. IL enables platform independence; the JIT specialises it for the current OS and CPU architecture.*
+
 2. **What is the JIT compiler and when does it run?**
+   *The JIT (Just-In-Time) compiler converts IL to native machine code **on the first call** of each method. Subsequent calls run the already-compiled native code — there's no re-interpretation. Since .NET introduced Tiered Compilation, the JIT does this in two passes: fast unoptimised code first (Tier 0), then full optimisation in the background once the method is "hot" (Tier 1).*
+
 3. **What is tiered compilation?**
+   *Tiered compilation is a two-phase JIT strategy: Tier 0 compiles quickly with minimal optimisation to keep startup fast. After a method is called enough times, a background thread recompiles it with full optimisations (inlining, devirtualisation, SIMD) — Tier 1. Calls after re-JIT use the faster Tier 1 code. This gives you fast startup (Tier 0) and maximum throughput at steady state (Tier 1) without picking one or the other.*
+
 4. **What replaced `AppDomain` in .NET Core and why?**
+   *`AssemblyLoadContext` replaced `AppDomain`. In .NET Core, `AppDomain` was stripped down — you can no longer create secondary AppDomains for isolation (the `CreateDomain` method throws). `AssemblyLoadContext` provides assembly isolation and **unloading** support for plugin scenarios: load assemblies into a collectible context, use them, then call `Unload()` to release them. It's more lightweight and precise than AppDomain was.*
+
 5. **What CLR subsystem manages thread scheduling?**
+   *The **Thread Pool** (managed by the CLR's thread pool manager). The thread pool maintains a pool of worker threads and I/O completion threads. It uses a **work-stealing scheduler** — idle threads can steal tasks from busy threads' queues. `Task`, `async/await`, `ThreadPool.QueueUserWorkItem`, and parallel operations all run on the thread pool. You rarely create raw `Thread` objects in modern .NET.*
 
 ---
 

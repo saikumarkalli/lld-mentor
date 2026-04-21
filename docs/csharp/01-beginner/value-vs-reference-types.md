@@ -130,11 +130,19 @@ int val2 = ints[0]; // No unboxing
 ## 4. Interview Questions
 
 1. **What is the difference between value types and reference types in C#?**
+   *Value types (int, bool, struct) store data directly and are copied on assignment — each variable has its own independent copy. Reference types (class, string, array) store a reference (memory address) to the actual data on the heap — assignment copies the reference, so both variables point to the same object.*
+
 2. **Where are value types stored? Is it always the stack?**
-   *(No — a value type *field* inside a class lives on the heap with the object)*
+   *Not always. Local variable value types go on the stack. But if a value type is a **field inside a class**, it lives on the heap — embedded inside the class object. The rule is: value types live where their container lives.*
+
 3. **What is boxing? Why is it a performance concern?**
+   *Boxing is when a value type (e.g. `int`) is converted to `object`. The CLR wraps it in a heap-allocated object. Unboxing extracts it back. It's expensive because: (1) a heap allocation happens, (2) the value is copied, and (3) the GC must eventually clean it up. In a hot loop, this can cause thousands of unnecessary allocations.*
+
 4. **Why does `string` behave like a value type even though it's a reference type?**
+   *Because `string` is **immutable**. Every "change" creates a new string — the original never mutates. So even though two variables can point to the same string, you'll never see one variable's string change through another variable — making it appear to have copy semantics like a value type.*
+
 5. **When would you choose `struct` over `class`?**
+   *Use struct when: the object is small (ideally ≤ 16 bytes), has no identity (two structs with same data should be "equal"), is short-lived and created frequently (avoid GC), and doesn't need inheritance. Classic examples: `DateTime`, `Point`, `Vector3`, `Money` value objects.*
 
 ---
 

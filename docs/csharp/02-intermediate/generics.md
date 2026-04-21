@@ -129,10 +129,19 @@ if (result.IsSuccess)
 ## 4. Interview Questions
 
 1. **What problem do generics solve? Why are they better than using `object`?**
+   *Without generics, you'd use `object` — losing type safety (runtime `InvalidCastException` instead of compile-time errors), boxing every value type (heap allocations), and requiring manual casting everywhere. Generics give you **compile-time type safety** (the compiler rejects the wrong type), **zero boxing for value types** (the JIT generates specialised code), and **self-documenting code** (`IRepository<User>` tells you this deals with `User` objects).*
+
 2. **What is a generic constraint? Give three examples.**
+   *Constraints restrict what types can be used as `T`, enabling the compiler to know what operations are safe to call. Examples: (1) `where T : class` — T must be a reference type, (2) `where T : IComparable<T>` — T must implement that interface, allowing `.CompareTo()`, (3) `where T : new()` — T must have a parameterless constructor, allowing `new T()` inside the method.*
+
 3. **What is the difference between covariance and contravariance?**
+   *Covariance (`out T`): you can use a more-derived type. `IEnumerable<Dog>` can be assigned to `IEnumerable<Animal>` because you only read from it — widening is safe. Contravariance (`in T`): you can use a more-general type. `Action<Animal>` can be assigned to `Action<Dog>` because if it handles any Animal, it certainly handles a Dog — narrowing the input is safe.*
+
 4. **How does the CLR handle generics for value types vs reference types?**
+   *For **reference types** (like `List<string>` and `List<Order>`): the JIT generates **one shared** native implementation because all reference type pointers are the same size. For **value types** (like `List<int>` and `List<double>`): the JIT generates a **separate** native implementation per concrete type — this is what enables zero-boxing for value types in generic collections.*
+
 5. **Can you instantiate a generic type directly: `new T()`? What constraint is needed?**
+   *Yes, but only with the `where T : new()` constraint. Without it, the compiler doesn't know if `T` has a parameterless constructor and gives a compile error. With the constraint: `public T Create<T>() where T : new() => new T();` works. Note: `new()` must be the last constraint in the `where` clause.*
 
 ---
 

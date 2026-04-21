@@ -135,10 +135,19 @@ public class OrderService
 ## 4. Interview Questions
 
 1. **What is the difference between an abstract class and an interface?**
+   *Abstract class: can have concrete methods, fields, constructors, and state — it IS a class. Interface: is a pure contract — no instance fields, no constructors (pre-C# 8). A class can inherit only one abstract class but implement many interfaces. Use abstract class when you need shared implementation; use interface when you only need a contract.*
+
 2. **When would you use an abstract class instead of an interface?**
+   *Use abstract class when: (1) you want to share concrete code across all subclasses (Template Method pattern), (2) you need protected fields or a constructor with dependencies, (3) the "is-a" relationship is strong and you need default behaviour. Use interface when there's no shared state, multiple implementations are unrelated, or you need DI-friendly swappability.*
+
 3. **Can an abstract class have a constructor? Can you instantiate it directly?**
+   *Yes, abstract classes can have constructors — they are called by derived class constructors via `base(...)`. No, you cannot instantiate an abstract class directly (`new AbstractClass()` → compile error). Its constructor only runs as part of creating a concrete subclass.*
+
 4. **What are default interface methods? What problem do they solve?**
+   *Default interface methods (C# 8+) let you add a method with a body directly to an interface. They solve the **backward compatibility** problem: adding a new method to a widely-used interface would break all existing implementations. With a default method, existing implementors inherit the default behaviour automatically and only override if they need custom logic.*
+
 5. **How does abstraction relate to the Dependency Inversion Principle?**
+   *DIP states: high-level modules should not depend on low-level modules — both should depend on abstractions. Abstraction (interfaces/abstract classes) is the mechanism that makes DIP possible. Instead of `OrderService` depending on `SqlProductRepository`, it depends on `IProductRepository`. Now you can swap the implementation (SQL, In-memory, mock) without touching `OrderService`.*
 
 ---
 

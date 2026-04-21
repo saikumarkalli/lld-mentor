@@ -137,10 +137,19 @@ public class Order
 ## 4. Interview Questions
 
 1. **What is encapsulation and why does it matter in real projects?**
+   *Encapsulation is binding data (state) and the operations that work on that data together in one unit, while hiding the internal state from the outside world. In real projects it matters because: (1) it prevents invalid states — a `BankAccount` can enforce that balance never goes negative. (2) it lets you change internal implementation without breaking callers. (3) it makes the intent of the class clear — use `Deposit()`, not `balance += x`.*
+
 2. **What's the difference between a property and a public field?**
+   *A public field is raw data exposure — any code can read and write it with no control. A property wraps the field with get/set accessors, letting you add validation, computed logic, or break changes to the internal representation without changing the caller. Properties also appear in interfaces, support data binding, and play better with serialization.*
+
 3. **Why would you expose a `List<T>` as `IReadOnlyList<T>`?**
+   *To prevent callers from mutating the internal collection. If you return `List<T>`, any caller can call `.Add()`, `.Clear()`, or `.RemoveAt()` — bypassing the class's own logic and breaking invariants. `IReadOnlyList<T>` gives read access (count + indexed reads) with no mutation capability.*
+
 4. **What is the `init` accessor (C# 9) and when is it useful?**
+   *`init` lets a property be set during **object construction** (including object initialisers) but never after. It's the middle ground between a fully mutable `set` and a completely locked `get`-only. Use it for DTOs and value objects where you want to build the object with clean syntax but guarantee immutability once it's created.*
+
 5. **How does `private set` differ from `init`?**
+   *`private set`: only the **class itself** can set the property at any time (in constructors, methods, anywhere inside the class). `init`: anyone can set it **only during object initialisation** (constructor or object initialiser), but nobody — not even the class itself — can change it afterwards via a method. `init` guarantees stronger immutability.*
 
 ---
 

@@ -171,10 +171,19 @@ public class TrackedCollection<T> : Collection<T>
 ## 4. Interview Questions
 
 1. **What is the difference between inheritance and composition? When would you choose each?**
+   *Inheritance = "is-a" — a `Dog` IS an `Animal`, so `Dog` extends `Animal`. Composition = "has-a" — a `Car` HAS an `Engine`. Prefer inheritance when the relationship is genuinely permanent and strong, and there's shared behaviour. Prefer composition when you want looser coupling, runtime swappability, or when the relationship is not truly "is-a" — inheritance just for code reuse is a red flag.*
+
 2. **Can a C# class inherit from multiple classes? Why not?**
+   *No — C# only allows single class inheritance. This avoids the **diamond problem**: if class D inherits from B and C, both of which inherit from A, and all override the same method, it's ambiguous which version D gets. C# solves this by allowing only one base class per type. Multiple interface implementation is allowed because interfaces don't carry conflicting implementations (pre-C# 8).*
+
 3. **What happens if a base class doesn't have a parameterless constructor?**
+   *If the base class only has parameterised constructors and the derived class doesn't explicitly call `base(...)`, you get a **compile error** — the compiler can't auto-generate a valid call. You must always explicitly chain to a matching base constructor with `: base(args)`.*
+
 4. **What does `sealed` do when applied to a class vs a method?**
+   *On a class: prevents any class from inheriting from it — it's the final implementation. On a method: prevents further overriding of that specific virtual method in any subclass. A sealed method must itself be an `override`. It lets you stop the override chain at a specific level without sealing the whole class.*
+
 5. **What is the Fragile Base Class problem?**
+   *When a base class changes its internal implementation (e.g., refactoring `AddRange` to stop calling `Add`), derived classes that relied on that internal behaviour silently break — even though no public API changed. It's "fragile" because the base class holds invisible assumptions that derived classes depend on. The fix: prefer composition, or design base classes for extension with clear documented extension points.*
 
 ---
 

@@ -144,10 +144,19 @@ public class PricingService
 ## 4. Interview Questions
 
 1. **What is the difference between method overloading and method overriding?**
+   *Overloading is **compile-time polymorphism** — multiple methods with the same name but different parameter types/counts. The compiler picks which one to call at build time. Overriding is **runtime polymorphism** — a derived class redefines a `virtual` method from its parent. The CLR picks which one to call at runtime based on the actual object type, not the declared variable type.*
+
 2. **What is the `virtual` keyword? What happens if you don't use it?**
+   *`virtual` marks a method as overridable. If a base class method is NOT `virtual`, derived classes cannot override it — they can only shadow it with `new` (method hiding). Without `virtual`, calling the method through a base-class reference always runs the base version, even if the object is actually a derived type. No vtable entry is created for non-virtual methods.*
+
 3. **What is the difference between `override` and `new`?**
+   *`override` participates in polymorphism — when called on a base-type reference, the derived version runs. `new` hides the base method — it only runs when the call is made through a variable of the derived type. `new` breaks polymorphism: `Animal a = new Dog(); a.Speak();` → if Speak uses `new`, it calls Animal's version, not Dog's.*
+
 4. **How does the CLR dispatch virtual method calls?**
+   *Every class with `virtual` methods has a **vtable** (virtual method table) — an array of function pointers, one per virtual method. When you call a virtual method, the CLR reads the vtable pointer from the object's header, looks up the correct function pointer, and jumps to it. This is one extra memory indirection compared to a direct call.*
+
 5. **Can a struct implement an interface and participate in polymorphism?**
+   *Yes, a struct can implement an interface. But when you store it as the interface type (`IComparable comp = someStruct`), the struct is **boxed** — wrapped in a heap object. The interface call then dispatches on the heap object. This means structs can participate in interface polymorphism, but at the cost of boxing for every such dispatch.*
 
 ---
 

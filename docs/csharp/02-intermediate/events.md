@@ -145,10 +145,19 @@ public class OrderApplicationService
 ## 4. Interview Questions
 
 1. **What is the difference between a delegate and an event?**
+   *A delegate is a type-safe function pointer — any code holding the delegate can invoke it. An event wraps a delegate with `add`/`remove` accessors and makes the backing delegate `private`. This means: only `+=` and `-=` are accessible externally — nobody outside the declaring class can fire the event or reset it to null. Events enforce the publisher-subscriber contract.*
+
 2. **Why can an event only be invoked from the class that declared it?**
+   *The `event` keyword generates a private backing delegate field. External code only has access to the `add` (+=) and `remove` (-=) accessors. Those accessors can't invoke the delegate — only the internal field can. So the compiler physically prevents external invocation, not just by convention.*
+
 3. **What is `EventHandler<T>` and why does it exist?**
+   *`EventHandler<TEventArgs>` is a built-in delegate type with signature `void Handler(object? sender, TEventArgs e)`. It exists to standardise event signatures across the .NET ecosystem — every UI event, every framework event follows this pattern. `sender` tells you who raised the event; `TEventArgs` carries the data. Using it makes your events consistent with all .NET tooling, documentation, and developer expectations.*
+
 4. **How do events cause memory leaks and how do you prevent them?**
+   *When you subscribe (`+=`), the publisher's event delegate holds a reference to your subscriber object. If the publisher lives longer than the subscriber, the subscriber can never be GC'd — the publisher is rooting it. Fix: always unsubscribe (`-=`) when done, typically in `Dispose()`. Alternatively, use weak references (WPF's `WeakEventManager`) or an event aggregator that manages subscription lifetimes.*
+
 5. **What does `?.Invoke()` do when raising an event?**
+   *It's the **null-safe invocation pattern**. If no one is subscribed to the event, the backing delegate is `null` — calling it directly would throw `NullReferenceException`. `?.Invoke()` first checks if the delegate is null; if not, it invokes it. Critically, it also captures the delegate reference before the null check, making it **thread-safe** against a race where the last subscriber unsubscribes between the null check and the actual call.*
 
 ---
 

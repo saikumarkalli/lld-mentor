@@ -154,10 +154,19 @@ var electronics = Flatten(rootCategory).FirstOrDefault(c => c.Name == "Electroni
 ## 4. Interview Questions
 
 1. **What does `yield return` do? How is it different from `return`?**
-2. **What type must a method return to use `yield return`?** (`IEnumerable<T>`, `IEnumerator<T>`, `IAsyncEnumerable<T>`)
+   *`yield return` emits one value from an iterator method and **pauses execution** there — the method state is saved and resumed when the caller asks for the next value. `return` exits the method completely and discards all state. `yield return` is a cooperative push model: produce one, pause, let the caller pull the next.*
+
+2. **What type must a method return to use `yield return`?**
+   *The method must return `IEnumerable<T>`, `IEnumerator<T>`, or `IAsyncEnumerable<T>`. The compiler validates this — you can't use `yield return` in a method that returns `List<T>` or any other type. The iterator pattern is tied specifically to these enumerable interfaces.*
+
 3. **What is the difference between `yield return` and `yield break`?**
+   *`yield return value` emits a value and pauses — the sequence continues. `yield break` terminates the sequence entirely — like a `return` statement but for iterators. After `yield break`, `MoveNext()` returns `false` and no more values are produced. Use `yield break` for early exit conditions (e.g., stopping once a sentinel is found).*
+
 4. **What class does the compiler generate when you use `yield return`?**
+   *The compiler transforms the entire method into a **state machine class** that implements both `IEnumerable<T>` and `IEnumerator<T>`. This class stores the method's local variables as fields, and each `yield return` becomes a state in a `switch` statement inside `MoveNext()`. The method body is essentially split across multiple state machine transitions.*
+
 5. **When would you prefer `yield return` over building and returning a `List<T>`?**
+   *Use `yield return` when: (1) the data set is large and you don't need it all in memory at once — streaming one item at a time, (2) the caller might stop early (e.g., `First()`, `Take(5)`) — avoids computing the rest, (3) you're generating an infinite or very long sequence, (4) you're reading from a database/stream and want to process results as they arrive rather than buffer everything.*
 
 ---
 

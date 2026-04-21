@@ -174,10 +174,19 @@ finally
 ## 4. Interview Questions
 
 1. **How does the .NET GC generational model work? Why are there 3 generations?**
+   *The GC heap is split into Gen 0 (new allocations, ~256KB), Gen 1 (survived one collection), and Gen 2 (long-lived objects). Collections are **most frequent in Gen 0** — cheap and fast. The design exploits the generational hypothesis: most objects die young. By collecting Gen 0 often, the GC avoids repeatedly scanning long-lived objects. Gen 2 collections are expensive and rare. Three generations is the commercially-proven sweet spot between collection cost and promotion overhead.*
+
 2. **What is the Large Object Heap and why doesn't it compact by default?**
+   *Objects ≥ 85KB go to the LOH, which is collected with Gen 2 but **not compacted** (memory is not defragmented). Compaction means moving objects and updating all references — for large objects this is expensive and pauses the application long. The downside: LOH fragments over time, leaving unusable gaps. Workaround: use `ArrayPool<byte>` to reuse large buffers instead of repeatedly allocating new ones. You can trigger compaction once with `GCSettings.LargeObjectHeapCompactionMode`.*
+
 3. **What is the difference between `Dispose()` and a finalizer?**
+   *`Dispose()`: called explicitly or by `using` — immediate, deterministic. Full access to managed resources. `Finalizer (~T())`: called by GC at an unpredictable future time — non-deterministic, can't safely access managed objects. Objects with finalizers survive an extra GC round-trip (finalization queue → finalizer runs → second GC collects). This promotes them toward Gen 2 — very expensive. Always prefer the Dispose pattern and call `GC.SuppressFinalize` so the finalizer is never needed.*
+
 4. **What is `GC.SuppressFinalize()` and why do you call it in `Dispose()`?**
+   *When your class has a finalizer, the GC puts it in the finalization queue on first collection, delaying actual memory reclamation by a full extra GC cycle. Calling `GC.SuppressFinalize(this)` in `Dispose()` removes the object from that queue — telling the GC "we already cleaned up everything the finalizer would have done." This prevents the unnecessary extra GC cycle and avoids promoting the object to a higher generation unnecessarily.*
+
 5. **What is a Stop-the-World pause? When does it happen?**
+   *A Stop-the-World (STW) pause suspends **all application threads** while the GC marks live objects and compacts the heap. This is necessary because the GC needs to move objects and update references — if threads were still running, they could read stale or invalid pointers. STW happens on every Gen 0 and Gen 1 collection. Gen 2 has a **background GC mode** that reduces STW by marking concurrently, but some parts still pause. Server GC uses multiple heaps and threads to reduce per-heap pause times.*
 
 ---
 

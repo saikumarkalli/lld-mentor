@@ -138,10 +138,19 @@ public IActionResult ToActionResult<T>(ApiResult<T> result) => result switch
 ## 4. Interview Questions
 
 1. **What is pattern matching and how does it improve over `if`/`else` chains?**
+   *Pattern matching combines type checking, extraction, and condition check into a single expression. Instead of `if (x is Foo) { var f = (Foo)x; ... }` you write `if (x is Foo { Name: var n })`. Switch expressions make type-branching **exhaustive** (compiler warns on unhandled cases), **concise** (no `break`, expression result), and **safe** (no cast exceptions). It eliminates the verbose cast-then-check boilerplate.*
+
 2. **What is the difference between the `is` pattern and a switch expression?**
+   *`is` is for a **single test** — check and optionally extract one value: `if (obj is Order { Total: > 100 } order)`. A switch expression handles **multiple mutually exclusive cases** on one input value: `shape switch { Circle c => ..., Rectangle r => ..., _ => ... }`. Switch expressions produce a value and can be exhaustive-checked by the compiler.*
+
 3. **What is the discard pattern `_`?**
+   *`_` is the **default/catch-all** pattern — it matches anything without binding it to a name. In a switch expression, `_ => value` is the "else" branch. In an `is` check, `_ => x` means "any remaining type I don't care about." It signals intent: I'm handling this case but don't need the value.*
+
 4. **What are property patterns and how do they simplify property checks?**
+   *A property pattern checks properties of an object inline: `if (order is { Status: OrderStatus.Active, Total: > 0 })`. Without it, you'd write two separate `&&` checks after a type cast. Property patterns can nest: `{ Customer: { Tier: CustomerTier.Gold } }` checks a nested property in one readable expression.*
+
 5. **What does the compiler check for exhaustiveness in switch expressions?**
+   *For **sealed class hierarchies** and **enums**, the compiler can statically enumerate all possible cases. If you don't handle all enum values or all subtypes of a sealed base, it emits a warning (CS8509). For open types like `object` or `string`, the compiler can't know all values, so it only warns if there's no default `_` arm. Adding `_ => throw new UnreachableException()` on open types is good defensive practice.*
 
 ---
 

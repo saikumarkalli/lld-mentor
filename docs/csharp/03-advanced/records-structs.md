@@ -139,10 +139,19 @@ Console.WriteLine(price == tax);  // False — value equality
 ## 4. Interview Questions
 
 1. **What is a `record` in C# and how does it differ from a `class`?**
+   *A `record` is a reference type (unless `record struct`) that the compiler auto-generates **value-based equality** for — two records with the same property values are considered equal. A `class` uses reference equality by default — two instances with identical data are not equal unless you override `Equals()`. Records also get a generated `ToString()`, `with` expression support, and a deconstructor. Classes are mutable by default; records use `init` properties making them immutable by default.*
+
 2. **What is the `with` expression and when is it useful?**
+   *`with` creates a **shallow copy** of a record with specified properties changed: `var updated = original with { Price = 99.99m }`. The original is untouched — immutability is preserved. It's useful for creating modified copies in functional-style code (event sourcing, immutable domain objects) where you want to express "everything the same, except this one field."*
+
 3. **What is the `init` accessor? How is it different from `set`?**
+   *`init` allows a property to be set **only during object construction** — in the constructor or via an object initialiser (`new Order { Id = 1 }`). After the object is created, no further modification is possible. `set` allows modification at any time from any code that has access. `init` gives you the ergonomics of object initialisers with the safety of immutability after construction.*
+
 4. **When would you use a `record struct` vs a `record class`?**
+   *`record class` (default): Reference type on the heap — GC-managed. Use for DTOs, domain events, value objects that may be large or null. `record struct`: Value type on the stack — no heap allocation, no GC. Use for small, frequently-created value objects (Money, Point, DateRange) where performance matters and nullability isn't needed. `readonly record struct` adds the additional guarantee that all members are also non-mutating.*
+
 5. **Can a `record` be mutable? How?**
+   *Yes — a record's properties are `init`-only by default in positional records, but you can explicitly add `set` instead: `public string Name { get; set; }`. You can also mix: `record Config(string Host) { public int Timeout { get; set; } }` — `Host` is init-only, `Timeout` is mutable. Records don't enforce immutability — they just make it the default syntax. That said, a mutable record defeats much of the purpose (predictable equality, safe caching).*
 
 ---
 

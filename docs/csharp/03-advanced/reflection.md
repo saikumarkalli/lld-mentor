@@ -166,10 +166,19 @@ public class SimpleContainer
 ## 4. Interview Questions
 
 1. **What is reflection and when would you use it?**
+   *Reflection is the API to **inspect and invoke types, methods, properties, and constructors at runtime** using the CLR's metadata. Use it when you don't know the target type at compile time — building a generic mapper, a DI container, an ORM, a serializer, or a test framework. Avoid it in hot paths — it's 10–100× slower than direct calls.*
+
 2. **What is the performance cost of reflection? How can you mitigate it?**
+   *Reflection is slow because: (1) no JIT optimisation — calls can't be inlined, (2) runtime type checks instead of compile-time, (3) boxing of value types. Mitigation: (a) **cache** `PropertyInfo[]`/`MethodInfo` in `static readonly` fields — don't call `GetProperties()` every time, (b) **compile to a delegate** using `Delegate.CreateDelegate` or `Expression.Compile()` — near-native speed after one-time setup, (c) use **source generators** to eliminate runtime reflection entirely.*
+
 3. **What is an attribute in C#? How do you create and read a custom attribute?**
+   *Attributes are **metadata annotations** attached to types or members at compile time. Create one by inheriting from `System.Attribute`, applying `[AttributeUsage]` to control where it can be used, and adding constructor/property arguments. Read it at runtime via `prop.GetCustomAttribute<MyAttribute>()`. Frameworks use this heavily — `[JsonPropertyName]`, `[Required]`, `[HttpGet]` are all attributes read by their respective frameworks via reflection.*
+
 4. **What is `typeof(T)` vs `obj.GetType()` — when does each matter?**
+   *`typeof(T)` is a **compile-time** operation — it returns the `Type` object for `T` as known at compile time. `obj.GetType()` is a **runtime** call that returns the **actual** type of the object instance. They differ when `T` is a base type but `obj` is a derived type: `typeof(Animal)` vs `new Dog().GetType()` (which returns `typeof(Dog)`). Use `typeof` when you want the declared type; use `GetType()` when you want the runtime type.*
+
 5. **What frameworks use reflection heavily?**
+   *`System.Text.Json` and `Newtonsoft.Json` (serialization), Entity Framework Core (model building from `[Key]`, `[Column]` attributes), ASP.NET Core (route discovery, model binding, filter attributes), xUnit/NUnit/MSTest (finds `[Fact]`/`[Test]` methods), AutoMapper (property mapping by name convention), FluentValidation. These are all "framework-level" tasks where the type isn't known at compile time.*
 
 ---
 

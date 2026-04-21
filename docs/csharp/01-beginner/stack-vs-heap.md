@@ -186,10 +186,19 @@ List<Point> structPoints = Enumerable.Range(0, 1_000_000)
 ## 4. Interview Questions
 
 1. **What is the difference between the stack and the heap in .NET?**
+   *The **stack** is a fast, thread-local, LIFO memory region for local variables and method frames — allocation is just a pointer move and cleanup is automatic when a method returns. The **heap** is a large shared pool managed by the Garbage Collector — objects allocated here survive across method calls but require GC to reclaim.*
+
 2. **Where does a local `int` variable live? Where does a `new Order()` live?**
+   *A local `int` lives on the **stack** — it's a value type and local, so it goes in the current method frame and disappears when the method returns. `new Order()` lives on the **heap** — `Order` is a class (reference type), so the object is allocated on the GC-managed heap. The variable holding the reference to it sits on the stack.*
+
 3. **What is boxing and unboxing? Why is it a performance concern?**
+   *Boxing is wrapping a value type (e.g., `int`) in a heap-allocated `object` wrapper. Unboxing is extracting the value back out. Every box causes a heap allocation plus a copy — in a tight loop with millions of operations, this means millions of small GC-tracked objects. This floods Gen 0 and triggers frequent GC collections, killing throughput.*
+
 4. **What happens when you assign one reference type variable to another?**
+   *Only the **reference** (memory address) is copied — both variables point to the same heap object. Modifying the object through one variable is immediately visible through the other. To get an independent copy, you must explicitly clone or deep-copy the object.*
+
 5. **What is a `StackOverflowException` and what causes it?**
+   *It happens when the call stack exceeds its fixed size (~1MB per thread). The most common cause is **infinite recursion** — a method calling itself with no base case. It can also happen with very deep legitimate recursion on large input. In modern .NET, `StackOverflowException` cannot be caught — it terminates the process.*
 
 ---
 

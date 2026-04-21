@@ -147,10 +147,19 @@ string result = string.Create(count * 3, numbers, (span, state) =>
 ## 4. Interview Questions
 
 1. **Why is `string` immutable in C#? What are the benefits?**
+   *`string` is immutable because every string object's internal `char[]` is fixed after creation — no method modifies it in place; they all return new strings. Benefits: (1) **Thread-safety** — you can share strings across threads without locking. (2) **String interning** — identical literals can share the same memory. (3) **Security** — strings used as keys (in dictionaries, connection strings) can't be mutated by external code.*
+
 2. **What is the performance difference between `string +=` and `StringBuilder.Append` in a loop?**
+   *`string +=` in a loop is **O(n²)** — each iteration creates a new string, copying all previous content. For 1,000 iterations this means ~500,000 characters of copying. `StringBuilder` maintains an internal `char[]` buffer and appends in O(1) amortised — only one final string is allocated at `.ToString()`. For 10,000 items, StringBuilder can be 100x faster.*
+
 3. **What is string interning? When would you use `string.Intern()`?**
+   *The CLR maintains an **intern pool** (a global dictionary of strings). String literals in code are automatically interned — so `"hello" == "hello"` always refers to the same object. `string.Intern(s)` manually adds a runtime string to this pool and returns the canonical reference. Use it when you load many repeated strings from files/DB (like XML tag names or config keys) and want to save memory and allow `ReferenceEquals` comparisons.*
+
 4. **Is `string` a value type or reference type? Why does it behave like a value type?**
+   *`string` is a **reference type** — it lives on the heap, and variables hold a reference to it. But it **behaves** like a value type because it's **immutable**. Since you can never change a string in place, you'll never see another variable's string mutate through your reference. Every "modification" gives you a new object, so it feels like you have your own independent copy.*
+
 5. **When is `StringBuilder` NOT the right choice?**
+   *When you concatenate fewer than ~4 strings — the `StringBuilder` object itself has overhead (allocation, internal array). For `"Hello" + " " + name + "!"` the compiler generates `string.Concat(...)` which is a single allocation. `StringBuilder` is the clear winner only once you're concatenating inside a loop or building a dynamically-sized output.*
 
 ---
 

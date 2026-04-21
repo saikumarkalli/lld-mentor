@@ -127,10 +127,19 @@ var sql = new QueryBuilder()
 ## 4. Interview Questions
 
 1. **What is an extension method? What are the three requirements to write one?**
+   *An extension method lets you add methods to existing types without modifying them. Three requirements: (1) the class must be `static`, (2) the method must be `static`, (3) the first parameter must use the `this` keyword followed by the type you're extending: `public static bool IsEmail(this string s)`. The compiler turns `myString.IsEmail()` into `StringExtensions.IsEmail(myString)` — no runtime overhead.*
+
 2. **Can you write an extension method on `null`? What happens if the first argument is null?**
+   *Yes — extension methods can be called on `null` because they're just static method calls. `string? s = null; s.IsNullOrEmpty()` compiles and runs — the `this` parameter just receives `null`. Inside the method, you must null-check manually. This is actually useful: `string.IsNullOrEmpty(s)` can be written as `s.IsNullOrEmpty()` and both handle null gracefully.*
+
 3. **What happens if an extension method has the same name as an existing instance method?**
+   *The **instance method always wins**. The extension method is only considered if there's no instance method with a matching name and signature. This is by design — it prevents extension methods from accidentally overriding built-in behaviour. You'd need to call it as a static method directly to use the extension in such a conflict.*
+
 4. **How does all of LINQ use extension methods?**
+   *Every LINQ operator (`Where`, `Select`, `OrderBy`, `GroupBy`, etc.) is a static method in the `System.Linq.Enumerable` (for `IEnumerable<T>`) and `System.Linq.Queryable` (for `IQueryable<T>`) classes, with `this IEnumerable<T> source` as the first parameter. Import `using System.Linq` and all collections gain these methods. LINQ simply wouldn't exist without extension methods.*
+
 5. **Can you write extension methods on sealed classes like `string`?**
+   *Yes — that's one of the main use cases. `string` is sealed (can't inherit from it) and is owned by the framework (can't modify it), but you can freely add extension methods to it. All of `System.String` methods like `string.IsNullOrEmpty()` inspired the pattern of writing `myString.IsNullOrEmpty()` as an extension.*
 
 ---
 

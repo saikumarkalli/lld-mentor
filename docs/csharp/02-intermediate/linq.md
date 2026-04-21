@@ -135,10 +135,19 @@ public async Task<List<ProductDto>> GetExpensiveProductsAsync(decimal minPrice)
 ## 4. Interview Questions
 
 1. **What is deferred execution in LINQ? Name three operators that are deferred and three that are immediate.**
+   *Deferred: the query is **not executed when written** — it builds a pipeline description. Execution happens only when the result is iterated or materialised. Deferred: `Where`, `Select`, `OrderBy`, `Skip`, `Take`. Immediate: `ToList()`, `Count()`, `First()`, `Sum()`, `ToDictionary()`. Immediate operators consume and materialise the pipeline right away.*
+
 2. **What is the difference between `IEnumerable<T>` and `IQueryable<T>`?**
+   *`IEnumerable<T>` executes LINQ operations **in memory** using compiled C# delegates. `IQueryable<T>` translates LINQ operations into **expression trees** that a provider (like EF Core) converts to SQL. If you call `.Where()` on an `IQueryable`, EF Core adds `WHERE` to the SQL. If you call it on `IEnumerable`, the entire table is loaded into memory first and filtered in C# — a critical performance difference.*
+
 3. **What is the N+1 problem and how does LINQ contribute to it?**
+   *N+1 means: 1 query to get a list of N entities, then N separate queries to load a related entity for each one. LINQ with lazy-loaded navigation properties quietly produces this: `foreach (var order in orders) Console.WriteLine(order.Customer.Name)` hits the DB once per order. Fix: use `.Include(o => o.Customer)` to eager-load, or project to a DTO with `.Select()` to fetch only what you need in one query.*
+
 4. **What is an expression tree? How is it different from a delegate?**
+   *A delegate is **compiled code** — an IL method pointer you call like a function. An expression tree (`Expression<Func<T, bool>>`) is a **data structure** that represents the code as a tree of nodes — it can be inspected, traversed, and translated. EF Core reads the expression tree and generates SQL from it. You can't do that with a compiled delegate.*
+
 5. **What does `.AsEnumerable()` do and why is it dangerous mid-query?**
+   *`.AsEnumerable()` converts an `IQueryable<T>` into `IEnumerable<T>`. From that point, no further LINQ operators are translated to SQL — they all run in C#. If you call `.AsEnumerable()` before `.Where()`, the database loads the entire table into memory and the filter runs in C#. This causes massive unnecessary data transfer and is a common accidental performance bug.*
 
 ---
 

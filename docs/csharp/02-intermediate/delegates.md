@@ -172,10 +172,19 @@ Console.WriteLine(pipeline.Execute("  hello  ")); // [HELLO]
 ## 4. Interview Questions
 
 1. **What is a delegate in C#? How is it different from an interface?**
+   *A delegate is a **type-safe function pointer** — a variable that holds a reference to a method (or multiple methods). The compiler generates a class extending `MulticastDelegate` for it. An interface defines a contract for an entire object with multiple methods. Use a delegate when you need a single callable — a callback, a handler, a filter. Use an interface when you need a richer contract with multiple members.*
+
 2. **What is the difference between `Func<T>` and `Action<T>`?**
+   *`Action<T>` is a delegate that takes a parameter and returns **nothing** (`void`) — use it for fire-and-forget operations like logging or notifications. `Func<T, TResult>` takes a parameter and **returns a value** — use it for transformations, factories, and selectors. `Predicate<T>` is equivalent to `Func<T, bool>` — a delegate that returns a yes/no decision.*
+
 3. **What is a multicast delegate and what happens with the return value?**
+   *A multicast delegate holds an **invocation list** of multiple methods. When invoked, it calls each in order. If the delegate has a return type, **only the return value of the last method** in the list is returned — all earlier return values are discarded. If any subscriber throws, execution stops and remaining subscribers are skipped.*
+
 4. **What is a closure? What happens to captured variables behind the scenes?**
+   *A closure is a lambda that "captures" (references) a variable from the enclosing scope. The compiler promotes the captured variable from the stack into a **heap-allocated closure class** — so the lambda can still access it after the enclosing method returns. This means captured value types silently get heap-allocated, which can surprise people expecting stack semantics.*
+
 5. **How do delegates relate to events in C#?**
+   *An event IS a delegate — specifically a delegate with restricted access. The `event` keyword wraps the delegate field with `add` and `remove` accessors (analogous to get/set on a property), making the field `private` and limiting external callers to only `+=` and `-=`. External code cannot invoke the event directly — only the declaring class can call it.*
 
 ---
 

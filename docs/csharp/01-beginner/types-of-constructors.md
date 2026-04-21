@@ -251,13 +251,19 @@ public class Order
 ## 4. Interview Questions
 
 1. **What happens to the default constructor when you define a parameterised constructor?**
-   *(The compiler-generated default constructor is removed. You must add it back explicitly if needed.)*
+   *The compiler auto-generates a default (no-arg) constructor only if you define **no** constructor at all. The moment you write any constructor, the compiler's auto-generated one disappears. So if your class has a parameterised constructor and callers also need `new MyClass()`, you must explicitly add a default constructor back.*
+
 2. **What is a static constructor and when does it run?**
-   *(It runs once, automatically, before the class is first used. It has no parameters or access modifiers.)*
+   *A static constructor (written as `static ClassName() { }`) is called automatically by the CLR exactly once, before the class is first used (first static access or first instance created), whichever comes first. It has no parameters, no access modifier, and you can't call it manually. The CLR guarantees it runs only once and is thread-safe.*
+
 3. **What design pattern uses a private constructor?**
-   *(Singleton — and Factory Method for named construction.)*
+   *The **Singleton** pattern — a private constructor prevents anyone outside the class from calling `new`, so only the class itself can control creating the single instance. The **Factory Method** pattern also uses a private constructor to force all creation through named static factory methods (e.g., `Temperature.FromCelsius()`) so callers have clear intent.*
+
 4. **What is constructor chaining? How is `this()` different from `base()`?**
+   *Constructor chaining is calling one constructor from another to avoid duplicating initialisation logic. `this(...)` chains to **another constructor in the same class** — useful for overloads that share core setup. `base(...)` chains to a **constructor in the parent class** — ensures the parent's initialisation runs before the child's body.*
+
 5. **Why is it better to validate in the constructor than with setters?**
+   *A constructor runs when the object is created — it's your only guaranteed window to enforce invariants before the object is ever used. Validation in setters can be bypassed if someone uses object initialisers or reflection, and properties set in any order could leave the object in a temporarily invalid state. The constructor guarantees the object is valid from birth.*
 
 ---
 

@@ -135,10 +135,19 @@ await saver.Completion;
 ## 3. Interview Questions
 
 1. **What is the difference between `Thread` and `Task` in .NET?**
+   *`Thread` creates a full OS thread — 1MB stack, expensive to create and destroy, no return value, no built-in cancellation. `Task` is a lightweight unit of work that runs on the **thread pool** — cheap to create, supports `CancellationToken`, returns `Task<T>`, composes with `async/await` and `Task.WhenAll`. In modern .NET you almost never use `Thread` directly — always prefer `Task`.*
+
 2. **When should you use `Parallel.ForEach` vs `await foreach`?**
+   *`Parallel.ForEach`: for **CPU-bound** work — it partitions the input and uses all CPU cores to process items simultaneously. `await foreach`: for consuming `IAsyncEnumerable<T>` — it processes items one at a time as they arrive from an async source (DB, API, file). Use `Parallel.ForEachAsync` when you need both: parallel processing of async operations (e.g., HTTP requests in parallel). Never use `Parallel.ForEach` with blocking I/O — it wastes thread pool threads.*
+
 3. **What is PLINQ and what is `AsOrdered()` for?**
+   *PLINQ (Parallel LINQ) adds `.AsParallel()` to LINQ — it partitions the source collection and processes each partition on a different CPU thread, then merges results. By default results arrive in **undefined order** (faster). `.AsOrdered()` forces the output to maintain the same order as the input, which has a performance cost (requires reordering the merged results). Use `AsOrdered()` only when order matters to the caller.*
+
 4. **What is `Channel<T>` and what problem does it solve over `ConcurrentQueue<T>`?**
+   *`Channel<T>` is an async-aware, bounded or unbounded FIFO queue for producer/consumer scenarios. Unlike `ConcurrentQueue<T>`, it supports: (1) **async backpressure** — `WriteAsync` awaits if the channel is full rather than discarding or throwing, (2) **async reading** — `ReadAllAsync()` returns `IAsyncEnumerable<T>` so consumers don't need to spin/poll, (3) **completion signaling** — `writer.Complete()` tells consumers no more items are coming.*
+
 5. **What is `MaxDegreeOfParallelism` and why shouldn't you set it too high?**
+   *`MaxDegreeOfParallelism` limits how many threads the Parallel loop or PLINQ can use simultaneously. Setting it to CPU count (or Environment.ProcessorCount) is ideal for **CPU-bound** work — one thread per core avoids context-switch overhead. Setting it too high floods the thread pool, causing excessive context switching and thread pool starvation for other work in the same process. For I/O-bound parallel work, a higher value is acceptable since threads spend most time waiting, not consuming CPU.*
 
 ---
 

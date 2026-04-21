@@ -163,10 +163,19 @@ await File.WriteAllBytesAsync("report.xlsx", bytes);
 ## 4. Interview Questions
 
 1. **What is `IDisposable` and why does it exist?**
+   *`IDisposable` is a contract for **deterministic cleanup** of resources the GC doesn't manage — file handles, DB connections, sockets, GDI objects. The GC cleans managed memory automatically but doesn't know about OS-level resources. `IDisposable.Dispose()` lets you release them immediately and predictably, not at some unknown future GC time.*
+
 2. **What is the difference between `Dispose()` and a finalizer?**
+   *`Dispose()`: called explicitly (or by `using`) — runs immediately, full access to managed resources. Finalizer (`~T()`): called by the GC at some unpredictable future time — it's a safety net if `Dispose()` was never called. Finalizers run on a dedicated finalizer thread, can't safely access managed objects (they may already be GC'd), and add a full extra GC round-trip cost. Always prefer `Dispose()` + `GC.SuppressFinalize` over relying on finalizers.*
+
 3. **What does `GC.SuppressFinalize(this)` do and why do you call it in `Dispose()`?**
+   *It tells the GC: "Don't bother running the finalizer for this object — we already cleaned up in `Dispose()`." Without this call, objects with finalizers survive an extra GC collection cycle (they're moved to the finalization queue). Calling it in `Dispose()` removes the object from the queue entirely, preventing the overhead and the double-cleanup.*
+
 4. **What does the `using` statement guarantee?**
+   *The compiler transforms `using (var x = new T()) { ... }` into a `try/finally` block where `Dispose()` is called in the `finally`. This guarantees `Dispose()` is called **even if an exception is thrown** inside the block. The C# 8 `using var` declaration does the same at the end of the enclosing scope.*
+
 5. **What is the difference between managed and unmanaged resources?**
+   *Managed resources: .NET objects on the heap — arrays, strings, other class instances. The GC tracks and collects these automatically. Unmanaged resources: OS-level handles — file descriptors, socket handles, Windows GDI objects, database connections. The GC has no knowledge of these — if you don't explicitly close them via `Dispose()` or equivalent, they leak until the process exits.*
 
 ---
 

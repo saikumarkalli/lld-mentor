@@ -135,10 +135,19 @@ public class JitBenchmark
 ## 4. Interview Questions
 
 1. **What is JIT compilation and when does it occur?**
+   *JIT (Just-In-Time) compilation converts IL bytecode to native machine instructions **on the first call** of each method. IL is platform-neutral; native code is specific to the current OS and CPU. The JIT runs transparently — you don't see it, but the first call to a method is slower than subsequent calls (which use cached native code). Tiered compilation makes even the first call reasonably fast.*
+
 2. **What is tiered compilation? What problem does it solve?**
+   *Old JIT: one shot — full optimization upfront → slow startup. Tiered compilation: Tier 0 = fast unoptimised code immediately (quick startup). After a method becomes "hot", a background thread recompiles it with full optimization → Tier 1 = maximum throughput. This solves the tradeoff between fast startup and high steady-state performance — you get both.*
+
 3. **What is method inlining and when does the JIT apply it?**
+   *Inlining replaces a method call with the method's body directly at the call site — eliminating the function call overhead (stack frame setup/teardown). The JIT inlines methods automatically when they are: short (few IL instructions), called frequently, and don't contain certain patterns (loops, exceptions as main path). You can hint with `[MethodImpl(MethodImplOptions.AggressiveInlining)]` but the JIT may still decline for large methods.*
+
 4. **What is devirtualization? How can you help the JIT devirtualize?**
+   *Devirtualization converts a virtual method call (vtable lookup + indirect jump) into a direct call — the JIT knows exactly which implementation to use. The JIT can devirtualize when it can prove there's only one possible type: (1) use `sealed` on your class — the JIT guarantees no subclass exists, (2) use concrete types instead of interfaces in hot paths, (3) declare local variables as concrete types not interfaces. Devirtualized calls can also be inlined.*
+
 5. **What does `[MethodImpl(MethodImplOptions.AggressiveInlining)]` do?**
+   *It's a hint to the JIT to inline this method even if it normally wouldn't (e.g., slightly too large). The JIT substitutes the method body at the call site, eliminating call overhead and enabling further optimizations like constant folding in the callee. Use it for hot, small utility methods — `IsValid()`, `Add()`, simple accessors — where the overhead of the call is significant relative to the method body. Don't use it on large methods — hints are not guarantees and the JIT may ignore them.*
 
 ---
 
