@@ -23,6 +23,7 @@
 - [ ] [Entity Framework Core — Core Concepts](./02-intermediate/efcore-basics.md) — DbContext, change tracking, migrations, and basic querying.
 
 ### Advanced
+- [x] [Task Parallel Library (TPL) Deep Dive](./03-advanced/tpl-deep-dive.md) — Tasks, Parallel.ForEach, ThreadPool, Channels, and Concurrency Primitives.
 - [ ] [EF Core — Performance & Pitfalls](./03-advanced/efcore-advanced.md) — Query compilation, split queries, N+1 problems, and explicit loading.
 - [ ] [Caching (IMemoryCache, IDistributedCache)](./03-advanced/caching.md) — Cache invalidation strategies, Redis integration, and memory limits.
 - [ ] [Authentication & Authorization (JWT, OAuth2)](./03-advanced/auth.md) — Token validation, claims-based authorization, and custom policies.
