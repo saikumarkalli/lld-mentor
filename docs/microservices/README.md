@@ -1,38 +1,72 @@
-# Microservices — Knowledge Hub
+# Microservices & Distributed Systems — Knowledge Hub
 
-> Architecture patterns, communication styles, resilience, and operational concerns.
+> A structured, progressive learning path to master distributed architecture, communication patterns, resilience, and operational concerns. Designed to be read in order — from Foundation to Solution Architect.
 
-## Topics
-
-### Beginner
-- [ ] [Monolith vs Microservices — Trade-offs](./01-beginner/monolith-vs-microservices.md)
-- [ ] [What makes a good service boundary?](./01-beginner/service-boundaries.md)
-- [ ] [REST vs gRPC vs GraphQL](./01-beginner/api-styles.md)
-- [ ] [Docker basics for microservices](./01-beginner/docker-basics.md)
-
-### Intermediate
-- [ ] [API Gateway Pattern](./02-intermediate/api-gateway.md)
-- [ ] [Service Discovery](./02-intermediate/service-discovery.md)
-- [ ] [Synchronous vs Asynchronous Communication](./02-intermediate/sync-vs-async.md)
-- [ ] [Message Brokers (RabbitMQ / Azure Service Bus)](./02-intermediate/message-brokers.md)
-- [ ] [Saga Pattern (Choreography vs Orchestration)](./02-intermediate/saga-pattern.md)
-- [ ] [Circuit Breaker, Retry, Bulkhead](./02-intermediate/resilience-patterns.md)
-- [ ] [Distributed Tracing & Logging](./02-intermediate/observability.md)
-
-### Advanced
-- [ ] [CQRS Pattern](./03-advanced/cqrs.md)
-- [ ] [Event Sourcing](./03-advanced/event-sourcing.md)
-- [ ] [Outbox Pattern](./03-advanced/outbox-pattern.md)
-- [ ] [Idempotency & At-least-once delivery](./03-advanced/idempotency.md)
-- [ ] [Service Mesh (Istio / Dapr)](./03-advanced/service-mesh.md)
-- [ ] [Distributed Transactions](./03-advanced/distributed-transactions.md)
+**Legend:** [ ] Planned · [x] Complete
 
 ---
 
-## Scenarios
-- [ ] [Design an Order Processing System](./scenarios/order-processing.md)
-- [ ] [Handle a cascade failure](./scenarios/cascade-failure.md)
-- [ ] [Migrate monolith to microservices](./scenarios/monolith-migration.md)
+## 📁 Folder Structure
+
+```
+docs/microservices/
+├── 01-beginner/        Part I: Foundation
+├── 02-intermediate/    Part II: Core Communication & Resilience
+├── 03-advanced/        Part III: Advanced Data & Transactions
+└── 04-scenarios/       Part IV: Real-World Scenarios
+```
+
+---
+
+## Part I: Foundation
+#### 📂 `01-beginner/`
+
+> The "Why" and "How" of splitting up applications. Understand the core trade-offs before writing any code.
+
+- [ ] [01-monolith-vs-microservices.md](./01-beginner/01-monolith-vs-microservices.md) — Trade-offs, scalability, and when NOT to use microservices.
+- [ ] [02-service-boundaries-ddd.md](./01-beginner/02-service-boundaries-ddd.md) — Bounded Contexts, Domain-Driven Design, and how to split the monolith.
+- [ ] [03-api-styles-rest-grpc-graphql.md](./01-beginner/03-api-styles-rest-grpc-graphql.md) — Protocols, data fetching, and when to use which style.
+- [ ] [04-docker-and-containers.md](./01-beginner/04-docker-and-containers.md) — Containerization basics, isolation, and why microservices rely on Docker.
+
+---
+
+## Part II: Core Communication & Resilience
+#### 📂 `02-intermediate/`
+
+> How isolated services securely talk to each other, discover each other, and survive inevitable network failures.
+
+- [ ] [05-api-gateway-pattern.md](./02-intermediate/05-api-gateway-pattern.md) — Backend-For-Frontend (BFF), routing, rate limiting, and SSL termination.
+- [ ] [06-service-discovery-registry.md](./02-intermediate/06-service-discovery-registry.md) — Client-side vs Server-side discovery, Consul, and Kubernetes DNS.
+- [ ] [07-sync-vs-async-communication.md](./02-intermediate/07-sync-vs-async-communication.md) — HTTP vs Messaging trade-offs, temporal coupling.
+- [ ] [08-message-brokers-event-driven.md](./02-intermediate/08-message-brokers-event-driven.md) — RabbitMQ, Kafka basics, Publish/Subscribe semantics.
+- [ ] [09-microservices-security-jwt-mtls.md](./02-intermediate/09-microservices-security-jwt-mtls.md) — Token propagation, OAuth2, and Mutual TLS (Zero Trust).
+- [ ] [10-resilience-circuit-breaker-retry.md](./02-intermediate/10-resilience-circuit-breaker-retry.md) — Circuit Breakers, Bulkheads, Timeouts, and gracefully degrading functionality.
+- [ ] [11-distributed-tracing-observability.md](./02-intermediate/11-distributed-tracing-observability.md) — OpenTelemetry, Jaeger, Correlation IDs, and centralized logging.
+
+---
+
+## Part III: Advanced Data & Transactions
+#### 📂 `03-advanced/`
+
+> The hardest part of distributed systems: managing state and guaranteeing consistency across the network.
+
+- [ ] [12-database-per-service-pattern.md](./03-advanced/12-database-per-service-pattern.md) — Data sovereignty, the dangers of shared databases, and API Composition.
+- [ ] [13-outbox-pattern.md](./03-advanced/13-outbox-pattern.md) — Guaranteeing message delivery and the dual-write problem.
+- [ ] [14-idempotency-at-least-once.md](./03-advanced/14-idempotency-at-least-once.md) — Preventing double-charging in asynchronous networks.
+- [ ] [15-distributed-transactions-saga.md](./03-advanced/15-distributed-transactions-saga.md) — Choreography vs Orchestration and compensating transactions.
+- [ ] [16-cqrs-and-event-sourcing.md](./03-advanced/16-cqrs-and-event-sourcing.md) — Event stores, immutable state, and Read/Write model separation.
+- [ ] [17-service-mesh-istio-dapr.md](./03-advanced/17-service-mesh-istio-dapr.md) — Sidecar proxies, abstracting infrastructure out of the application code.
+
+---
+
+## Part IV: Real-World Scenarios
+#### 📂 `04-scenarios/`
+
+> Architectural system design interviews and practical application of the patterns above.
+
+- [ ] [18-scenario-monolith-migration.md](./04-scenarios/18-scenario-monolith-migration.md) — The Strangler Fig Pattern and incremental modernization.
+- [ ] [19-scenario-order-processing-system.md](./04-scenarios/19-scenario-order-processing-system.md) — Applying Saga, API Gateway, and Outbox patterns together.
+- [ ] [20-scenario-cascade-failure-recovery.md](./04-scenarios/20-scenario-cascade-failure-recovery.md) — Post-mortem analysis of a system collapse and how resilience patterns could have saved it.
 
 ---
 
