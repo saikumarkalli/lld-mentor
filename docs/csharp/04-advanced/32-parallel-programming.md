@@ -1,4 +1,4 @@
-# Chapter 32 � Parallel Programming
+# Chapter 32 � Parallel Programming
 
 > **⚡ Core Idea (30 seconds):** Parallel programming is about splitting **CPU-bound** work across multiple processor cores to run simultaneously. `Parallel.For/ForEach` partitions a collection and runs iterations on ThreadPool threads. PLINQ adds parallelism to LINQ queries. They are NOT for I/O work — use `async/await` for that.
 
@@ -227,7 +227,7 @@ data.AsParallel().ForAll(item => Console.WriteLine(item));
 
 ---
 
-## 🔗 Connected Topics
+## Connected Topics
 
 - [Task vs Thread](./29-task-vs-thread.md) — Parallel APIs use the ThreadPool internally
 - [Synchronization](./30-synchronization.md) — Shared state in parallel loops needs protection

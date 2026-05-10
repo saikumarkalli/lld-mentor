@@ -1,4 +1,4 @@
-# Chapter 27 � async / await & Task Internals
+# Chapter 27 � async / await & Task Internals
 
 > **⚡ Core Idea (30 seconds):** `async`/`await` lets you write asynchronous code that reads like synchronous code. The compiler transforms your method into a **state machine** that yields the thread when waiting for I/O, then resumes it when the operation completes — without ever blocking.
 
@@ -235,7 +235,7 @@ _ = SendEmailAsync().ContinueWith(
 
 ---
 
-## 🔗 Connected Topics
+## Connected Topics
 
 - [Delegates](../03-intermediate/19-delegates.md) — `Task.ContinueWith` accepts `Func<Task, T>` delegates
 - [Memory Management](./33-memory-management.md) — async state machines allocate; ValueTask reduces this

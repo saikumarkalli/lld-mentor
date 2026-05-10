@@ -1,4 +1,4 @@
-# Chapter 42 � JIT Compilation & Tiered Compilation
+# Chapter 42 � JIT Compilation & Tiered Compilation
 
 > **⚡ Core Idea (30 seconds):** The JIT (Just-In-Time) compiler converts IL to native CPU instructions when a method is **first called**. Tiered compilation made this smarter — it compiles fast unoptimized code first (quick startup), then recompiles hot methods with full optimizations in the background. Knowing this helps you write code the JIT can optimize aggressively.
 
@@ -207,7 +207,7 @@ for (int i = 0; i < 1_000_000; i++)
 | **Level 3** | sealed for devirtualization, MethodImpl attributes, SIMD vectorization |
 | **Level 4** | PGO, R2R, NativeAOT, custom JIT hints, dynamic PGO (.NET 8+) |
 
-## 🔗 Connected Topics
+## Connected Topics
 - [CLR Internals](./41-clr-internals.md) — JIT is a CLR subsystem
 - [Performance Tuning](./44-performance-tuning.md) — JIT-friendly patterns drive perf
 - [Garbage Collection](./40-garbage-collection.md) — GC pauses interrupt JIT-compiled code

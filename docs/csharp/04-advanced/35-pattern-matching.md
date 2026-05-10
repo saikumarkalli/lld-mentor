@@ -1,4 +1,4 @@
-# Chapter 35 � Pattern Matching
+# Chapter 35 � Pattern Matching
 
 > **⚡ Core Idea (30 seconds):** Pattern matching lets you **test a value against a shape and extract it in one step**. C# has evolved from simple `is` checks to powerful switch expressions with positional, property, and relational patterns. It makes type-branching code concise, exhaustive, and readable.
 
@@ -229,7 +229,7 @@ if (order is { Total: > 100 }) { }      // ✅ Properties only
 | **Level 3** | Relational, logical, list patterns; exhaustiveness rules |
 | **Level 4** | Positional patterns with `Deconstruct`, pattern matching + records for discriminated unions |
 
-## 🔗 Connected Topics
+## Connected Topics
 - [Records & Structs](../04-advanced/36-records-structs.md) — Records work naturally with switch expressions
 - [Nullable Types](../01-beginner/03-nullable-types.md) — `obj is not null` is modern null check
 - [Generics](../03-intermediate/18-generics.md) — `OfType<T>()` is LINQ's type pattern equivalent

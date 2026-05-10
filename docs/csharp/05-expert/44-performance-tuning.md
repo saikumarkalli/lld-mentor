@@ -1,4 +1,4 @@
-# Chapter 44 � Low-Level Performance Tuning
+# Chapter 44 � Low-Level Performance Tuning
 
 > **⚡ Core Idea (30 seconds):** Performance tuning in .NET means: measure first (BenchmarkDotNet), eliminate allocations (Span, ArrayPool, ObjectPool), reduce GC pressure, help the JIT optimize (sealed, inlining), and use the right data structure. **Never optimize without measuring.**
 
@@ -247,7 +247,7 @@ public async Task<string> Get(string url)
 | **Level 3** | Lock-free patterns, Volatile, Interlocked, BenchmarkDotNet deep results |
 | **Level 4** | SIMD (System.Numerics), unsafe, stackalloc, custom memory allocators |
 
-## 🔗 Connected Topics
+## Connected Topics
 - [Garbage Collection](./40-garbage-collection.md) — Allocation reduction → GC pressure reduction
 - [Span & Memory](../04-advanced/34-span-memory.md) — Zero-alloc memory operations
 - [JIT Compilation](./42-jit-compilation.md) — JIT-friendly code is inherently faster

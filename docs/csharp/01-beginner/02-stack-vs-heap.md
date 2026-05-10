@@ -1,4 +1,4 @@
-# Chapter 2 � Stack vs Heap Memory
+# Chapter 2 � Stack vs Heap Memory
 
 > **⚡ Core Idea (30 seconds):** Every variable in C# lives in one of two memory areas. The **stack** is fast, small, and automatic — local variables live here. The **heap** is large and GC-managed — objects live here. **Value types** typically live on the stack; **reference types** always live on the heap. That distinction drives performance, memory layout, and assignment semantics.
 
@@ -276,7 +276,7 @@ Console.WriteLine(p.X); // 0 — p was never changed!
 | **Level 3** | struct in class lives on heap; `in` keyword; `readonly struct` |
 | **Level 4** | `stackalloc`, GC generations interaction, struct layout padding, CPU cache line effects |
 
-## 🔗 Connected Topics
+## Connected Topics
 - [Value Types vs Reference Types](./01-value-vs-reference-types.md) — The "what" to this topic's "where"
 - [Nullable Types](./03-nullable-types.md) — `Nullable<T>` wraps value types with heap semantics
 - [Garbage Collection](../05-expert/40-garbage-collection.md) — The GC that manages the heap

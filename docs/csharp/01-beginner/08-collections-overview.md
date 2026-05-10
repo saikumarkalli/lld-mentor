@@ -1,4 +1,4 @@
-# Chapter 8 � Collections in C#
+# Chapter 8 � Collections in C#
 
 > **⚡ Core Idea (30 seconds):** A collection is a container that holds multiple items. C# has many — `List<T>`, `Dictionary<K,V>`, `HashSet<T>`, `Queue<T>`, `Stack<T>`, and more. Picking the **wrong one** is one of the most common performance mistakes. Each exists for a specific job — know the job, pick the tool.
 
@@ -440,7 +440,7 @@ public void UpdateSetting(int key, Config config)
 
 ---
 
-## 4. Time Complexity Cheat Sheet
+## 5. Time Complexity Cheat Sheet
 
 | Collection | Add | Remove | Lookup/Contains | Access by Index |
 |-----------|:---:|:------:|:---------------:|:---------------:|
@@ -459,7 +459,7 @@ public void UpdateSetting(int key, Config config)
 
 ---
 
-## 5. Which Collection Should I Use?
+## 6. Which Collection Should I Use?
 
 ```
 I need to...
@@ -478,7 +478,7 @@ I need to...
 
 ---
 
-## 6. Code Examples
+## 7. Code Examples
 
 ### Basic — Choosing the Right Tool
 ```csharp
@@ -548,7 +548,7 @@ public class OrderProcessor
 
 ---
 
-## 7. Interview Questions
+## 8. Interview Questions
 
 1. **What is the difference between `List<T>` and `LinkedList<T>`?**
    *(List: O(1) index access, O(n) mid-insert. LinkedList: O(1) insert/delete at known node, no index access.)*
@@ -563,7 +563,7 @@ public class OrderProcessor
 
 ---
 
-## 8. Follow-up Questions
+## 9. Follow-up Questions
 
 - Can you use a `List<T>` as a `Dictionary<K,V>` key? As a `HashSet<T>` element?
   *(Technically yes, but `List<T>` uses reference equality for `GetHashCode()`/`Equals()` — two lists with identical contents are NOT equal. Very surprising and a common bug.)*
@@ -576,7 +576,7 @@ public class OrderProcessor
 
 ---
 
-## 9. Edge Cases / Common Mistakes
+## 10. Edge Cases / Common Mistakes
 
 ```csharp
 // MISTAKE 1: Using indexer on Dictionary — throws on missing key
@@ -615,7 +615,7 @@ cat.Name = "Changed"; // HashCode may change → dict[cat] now fails to find it!
 
 ---
 
-## 10. Depth Levels
+## 11. Depth Levels
 
 | Level | Focus |
 |-------|-------|
@@ -626,7 +626,7 @@ cat.Name = "Changed"; // HashCode may change → dict[cat] now fails to find it!
 
 ---
 
-## 🔗 Connected Topics
+## Connected Topics
 - [Collection Interfaces](./09-collection-interfaces.md) — IEnumerable vs ICollection vs IList
 - [Generics](../03-intermediate/18-generics.md) — All collections are generic
 - [LINQ](../03-intermediate/21-linq.md) — Operates over `IEnumerable<T>` — all collections

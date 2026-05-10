@@ -1,4 +1,4 @@
-# Chapter 31 � Deadlocks
+# Chapter 31 � Deadlocks
 
 > **⚡ Core Idea (30 seconds):** A deadlock occurs when two or more threads are **permanently waiting for each other** to release resources. Thread A holds Lock 1 and waits for Lock 2. Thread B holds Lock 2 and waits for Lock 1. Neither can proceed — the application hangs forever.
 
@@ -281,7 +281,7 @@ services.AddSingleton(sp => sp.GetRequiredService<IAsyncInit>().InitAsync().Resu
 
 ---
 
-## 🔗 Connected Topics
+## Connected Topics
 
 - [Synchronization](./30-synchronization.md) — Lock primitives that can cause deadlocks if misused
 - [Task vs Thread](./29-task-vs-thread.md) — ThreadPool starvation is often mistaken for deadlocks

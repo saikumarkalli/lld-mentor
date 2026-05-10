@@ -1,4 +1,4 @@
-# Chapter 25 � Exception Handling Internals
+# Chapter 25 � Exception Handling Internals
 
 > **⚡ Core Idea (30 seconds):** Exceptions are **not control flow** — they are an expensive unwinding mechanism the CLR uses when something truly unexpected happens. Understanding how `try/catch/finally` works at the CLR level, when to throw, and what it costs helps you write resilient, performant code.
 
@@ -267,7 +267,7 @@ catch (Exception ex)
 
 ---
 
-## 🔗 Connected Topics
+## Connected Topics
 
 - [Memory Management](../04-advanced/33-memory-management.md) — `using`/`IDisposable` relies on `finally` to guarantee cleanup
 - [Async/Await](../04-advanced/27-async-await.md) — `AggregateException` unwrapping in async exception handling

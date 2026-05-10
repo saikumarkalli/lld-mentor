@@ -1,4 +1,4 @@
-# Chapter 36 � Records, Structs & Immutability
+# Chapter 36 � Records, Structs & Immutability
 
 > **⚡ Core Idea (30 seconds):** `record` types give you **value-based equality, immutability, and `with` expressions** with minimal boilerplate. They solve the "this DTO needs proper equality" problem. Know when to use `record class`, `record struct`, `class`, and `struct` — interviewers love this comparison.
 
@@ -223,7 +223,7 @@ Assert.Equal(expected, actual); // ❌ Fails without overriding Equals
 | **Level 3** | record struct, equality on reference-type members, record inheritance |
 | **Level 4** | Compiler-generated IL, positional deconstruct, ImmutableCollections with records |
 
-## 🔗 Connected Topics
+## Connected Topics
 - [Pattern Matching](./35-pattern-matching.md) — records + switch expressions = discriminated unions
 - [Value vs Reference Types](../01-beginner/01-value-vs-reference-types.md) — record struct vs record class
 - [Garbage Collection](../05-expert/40-garbage-collection.md) — record struct avoids GC

@@ -1,4 +1,4 @@
-# Chapter 12 � Encapsulation
+# Chapter 12 � Encapsulation
 
 > **⚡ Core Idea (30 seconds):** Encapsulation means **hiding internal state and exposing only what's necessary**. A class controls its data through access modifiers — objects don't let you reach in and mutate their guts directly.
 
@@ -209,6 +209,6 @@ public string Name
 | **Level 3** | DDD aggregates, anemic vs rich domain models |
 | **Level 4** | Defensive copying, `record` types for immutability |
 
-## 🔗 Connected Topics
+## Connected Topics
 - [Abstraction](./15-abstraction.md) | [Inheritance](./13-inheritance.md) | [Polymorphism](./14-polymorphism.md)
 

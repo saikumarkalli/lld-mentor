@@ -161,7 +161,7 @@ if (Enum.TryParse<OrderStatus>(userInput, out var parsed) && Enum.IsDefined(type
 
 ---
 
-## 🔗 Connected Topics
+## Connected Topics
 
 - [Value Types vs Reference Types](./01-value-vs-reference-types.md) — Enums are value types (stored on the stack)
 - [Pattern Matching](../04-advanced/35-pattern-matching.md) — Switch expressions on enums with exhaustiveness checking

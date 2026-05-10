@@ -145,7 +145,7 @@ public class Child : Mid { } // ✅ Compiles — the CLASS isn't sealed, just M(
 
 ---
 
-## 🔗 Connected Topics
+## Connected Topics
 
 - [Polymorphism](./14-polymorphism.md) — Sealed stops the virtual dispatch chain
 - [Inheritance](./13-inheritance.md) — Sealed is the opposite of abstract in the inheritance spectrum

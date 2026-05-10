@@ -1,4 +1,4 @@
-# Chapter 41 � CLR Internals
+# Chapter 41 � CLR Internals
 
 > **⚡ Core Idea (30 seconds):** The CLR (Common Language Runtime) is the engine that executes .NET code. It manages memory (GC), compiles IL to native code (JIT), enforces type safety, loads assemblies, and handles threads and exceptions. Understanding it helps you write code that works *with* the runtime, not against it.
 
@@ -194,7 +194,7 @@ Assembly.LoadFrom("/custom/path/MyLib.dll"); // Explicit path — isolation gotc
 | **Level 3** | IL instruction set, CLR type system vtables, verifier |
 | **Level 4** | NativeAOT, dynamic IL generation (Emit), DynamicMethod |
 
-## 🔗 Connected Topics
+## Connected Topics
 - [JIT Compilation](./42-jit-compilation.md) — Deep dive into the JIT tier
 - [Garbage Collection](./40-garbage-collection.md) — GC is a CLR subsystem
 - [Reflection](../04-advanced/37-reflection.md) — Reads the CLR's metadata

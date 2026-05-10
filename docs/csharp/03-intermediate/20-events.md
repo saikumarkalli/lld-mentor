@@ -1,4 +1,4 @@
-# Chapter 20 � Events & Event Patterns
+# Chapter 20 � Events & Event Patterns
 
 > **⚡ Core Idea (30 seconds):** An event is a **delegate with restricted access** — only the declaring class can invoke it, but anyone can subscribe or unsubscribe. Events implement the Observer pattern natively in C# and are how the language decouples publishers from subscribers.
 
@@ -229,7 +229,7 @@ foreach (EventHandler handler in MyEvent.GetInvocationList())
 | **Level 3** | Generated add/remove accessors, GetInvocationList for error isolation |
 | **Level 4** | WeakEventManager, TaskCompletionSource bridge, Reactive Extensions (Rx) |
 
-## 🔗 Connected Topics
+## Connected Topics
 - [Delegates](./19-delegates.md) — Events ARE delegates with access restrictions
 - [Memory Management](../04-advanced/33-memory-management.md) — Event subscription memory leaks
 

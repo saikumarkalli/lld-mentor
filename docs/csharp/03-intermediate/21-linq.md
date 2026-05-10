@@ -1,4 +1,4 @@
-# Chapter 21 � LINQ Internals
+# Chapter 21 � LINQ Internals
 
 > **⚡ Core Idea (30 seconds):** LINQ is a query language embedded in C# using delegates and extension methods. The critical thing to understand is **when** the query executes: deferred queries build a pipeline and execute **only when iterated**. Getting this wrong causes N+1 bugs, multiple enumeration, and unexpected database hits.
 
@@ -220,7 +220,7 @@ var results = context.Users
 
 ---
 
-## 🔗 Connected Topics
+## Connected Topics
 
 - [Delegates](./19-delegates.md) — LINQ is built entirely on `Func<T, bool>` and `Func<T, TResult>` delegates
 - [Iterators & yield return](./24-iterators.md) — How deferred LINQ operators are implemented

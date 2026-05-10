@@ -1,4 +1,4 @@
-# Chapter 5 � Access Modifiers
+# Chapter 5 � Access Modifiers
 
 > **⚡ Core Idea (30 seconds):** Access modifiers control **who can see what**. They're not just a security feature — they define your API contract, enforce encapsulation, and prevent unintended coupling between modules. Choosing the wrong modifier is a design mistake, not just a style issue.
 
@@ -223,7 +223,7 @@ public class Outer
 | **Level 3** | protected internal vs private protected, InternalsVisibleTo |
 | **Level 4** | Library API design with minimal public surface, default interface methods |
 
-## 🔗 Connected Topics
+## Connected Topics
 - [Encapsulation](../02-oop/12-encapsulation.md) — Access modifiers are encapsulation's mechanism
 - [Abstraction](../02-oop/15-abstraction.md) — public interfaces, internal implementations
 - [Inheritance](../02-oop/13-inheritance.md) — protected members and derived class access

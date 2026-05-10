@@ -161,7 +161,7 @@ Span<byte> GetBuffer()
 
 ---
 
-## 🔗 Connected Topics
+## Connected Topics
 
 - [Span\<T\> & Memory\<T\>](../04-advanced/34-span-memory.md) — The safe container for stackalloc memory
 - [Stack vs Heap](../01-beginner/02-stack-vs-heap.md) — The architectural difference between the two memory areas

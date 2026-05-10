@@ -69,10 +69,14 @@ docs/csharp/
 > OOP isn't just theory — it's the backbone of every .NET framework, every design pattern,
 > and every enterprise codebase. These four pillars appear in every senior-level interview.
 
-| Ch | Topic | File | What You Will Learn | Code | Status |
-|:--:|-------|------|---------------------|------|:------:|
-| 16 | Sealed Classes & Methods | [sealed-classes.md](./02-oop/16-sealed-classes.md) | Why `sealed` improves JIT performance (devirtualization). Sealed overrides. When to seal and when not to. Framework design guidelines. | — | ✅ |
-| 17 | Constructor Chaining | [constructors.md](./02-oop/17-constructors.md) | `this()` and `base()` chaining. Execution order in inheritance hierarchies. Mandatory vs optional parameter patterns. Object initializer syntax vs constructor arguments. | — | ✅ |
+| Ch | Topic | File | What You Will Learn | Status |
+|:--:|-------|------|---------------------|:------:|
+| 12 | Encapsulation | [encapsulation.md](./02-oop/12-encapsulation.md) | Data hiding with access modifiers. Properties vs fields. Auto-properties, computed properties. Why direct field access is an anti-pattern. Encapsulation's role in SOLID. | ✅ |
+| 13 | Inheritance | [inheritance.md](./02-oop/13-inheritance.md) | `base` keyword, constructor chaining, method overriding (`virtual`/`override`), `sealed` override. Why C# forbids multiple class inheritance and uses interfaces instead. | ✅ |
+| 14 | Polymorphism | [polymorphism.md](./02-oop/14-polymorphism.md) | Compile-time (overloading) vs runtime (overriding) polymorphism. `new` keyword hiding vs `override`. How the CLR uses the Virtual Method Table (vtable) for dispatch. | ✅ |
+| 15 | Abstraction | [abstraction.md](./02-oop/15-abstraction.md) | Abstract classes vs interfaces. When to use each. Default interface methods (C# 8+). The template method pattern as abstraction in action. | ✅ |
+| 16 | Sealed Classes & Methods | [sealed-classes.md](./02-oop/16-sealed-classes.md) | Why `sealed` improves JIT performance (devirtualization). Sealed overrides. When to seal and when not to. Framework design guidelines. | ✅ |
+| 17 | Constructor Chaining | [constructors.md](./02-oop/17-constructors.md) | `this()` and `base()` chaining. Execution order in inheritance hierarchies. Mandatory vs optional parameter patterns. Object initializer syntax vs constructor arguments. | ✅ |
 
 ---
 
@@ -153,7 +157,7 @@ docs/csharp/
 
 ---
 
-## Part VI — Serialization & I/O *(Planned)*
+## Part VI — Serialization & I/O
 #### 📂 `06-serialization/`
 
 > Real-world applications read and write data constantly. Understanding stream semantics,

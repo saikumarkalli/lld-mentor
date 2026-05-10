@@ -1,4 +1,4 @@
-# Chapter 7 � Types of Classes
+# Chapter 7 � Types of Classes
 
 > **⚡ Core Idea (30 seconds):** C# has several types of classes — each keyword (`abstract`, `sealed`, `static`, `partial`) restricts or enables specific behaviours. Knowing *why* each type exists (not just the syntax) is what separates a senior from a junior in interviews.
 
@@ -252,7 +252,7 @@ public record Point3D(int X, int Y, int Z) : Point(X, Y); // Inherits!
 | **Level 3** | sealed + JIT devirtualization, static vs instance service class design |
 | **Level 4** | Generic class constraints, nested classes accessing outer private state |
 
-## 🔗 Connected Topics
+## Connected Topics
 - [Abstraction](../02-oop/15-abstraction.md) — `abstract` class is the mechanism of abstraction
 - [Inheritance](../02-oop/13-inheritance.md) — `sealed` controls the inheritance chain
 - [Access Modifiers](./05-access-modifiers.md) — controls member visibility within class types

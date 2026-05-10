@@ -162,7 +162,7 @@ await file.CopyToAsync(ms); // ❌ 10GB file causes OutOfMemoryException
 
 ---
 
-## 🔗 Connected Topics
+## Connected Topics
 
 - [Span\<T\>](../04-advanced/34-span-memory.md) — The fundamental type behind zero-allocation parsing
 - [Task Parallel Library](../05-expert/43-task-parallel-library.md) — `System.Threading.Channels` (similar producer/consumer model to Pipelines)

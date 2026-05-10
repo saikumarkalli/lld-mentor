@@ -148,7 +148,7 @@ public void Process(IEnumerable<Order> orders)
 
 ---
 
-## 🔗 Connected Topics
+## Connected Topics
 
 - [Collections Overview](./08-collections-overview.md) — Concrete types that implement these interfaces
 - [LINQ](../03-intermediate/21-linq.md) — LINQ operates on `IEnumerable<T>` and `IQueryable<T>`

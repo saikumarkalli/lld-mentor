@@ -1,4 +1,4 @@
-# Chapter 28 � CancellationToken
+# Chapter 28 � CancellationToken
 
 > **⚡ Core Idea (30 seconds):** A `CancellationToken` is a **cooperative cancellation signal**. You cannot force-kill an async operation — instead, you pass a token that the operation periodically checks. If cancellation is requested, the operation gracefully exits by throwing `OperationCanceledException`.
 
@@ -240,7 +240,7 @@ public async Task<IActionResult> GetData(CancellationToken ct)
 
 ---
 
-## 🔗 Connected Topics
+## Connected Topics
 
 - [Async/Await](./27-async-await.md) — Every async method should accept and forward a CancellationToken
 - [Task vs Thread](./29-task-vs-thread.md) — Cancellation replaces the dangerous `Thread.Abort()`

@@ -1,4 +1,4 @@
-# Chapter 14 � Polymorphism
+# Chapter 14 � Polymorphism
 
 > **⚡ Core Idea (30 seconds):** Polymorphism means **one interface, many implementations**. The same method call produces different behavior depending on the actual runtime type. It's what lets you write code against abstractions rather than concrete types.
 
@@ -214,7 +214,7 @@ IComparable comp = someStruct; // Boxes the struct just to call the interface me
 | **Level 3** | vtable mechanics, JIT devirtualization, sealed override |
 | **Level 4** | Covariance/contravariance, generic polymorphism |
 
-## 🔗 Connected Topics
+## Connected Topics
 - [Encapsulation](./12-encapsulation.md) | [Abstraction](./15-abstraction.md) | [Inheritance](./13-inheritance.md)
 - [Delegates](../03-intermediate/19-delegates.md) — functional polymorphism
 

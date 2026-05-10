@@ -137,7 +137,7 @@ using (var writer = new StreamWriter(ms, Encoding.UTF8, 1024, leaveOpen: true)) 
 
 ---
 
-## 🔗 Connected Topics
+## Connected Topics
 
 - [Memory Management / IDisposable](../04-advanced/33-memory-management.md) — Why streams must be disposed
 - [Async / Await](../04-advanced/27-async-await.md) — Asynchronous I/O mechanics

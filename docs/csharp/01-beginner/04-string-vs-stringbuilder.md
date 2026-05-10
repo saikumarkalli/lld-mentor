@@ -1,4 +1,4 @@
-# Chapter 4 � String vs StringBuilder
+# Chapter 4 � String vs StringBuilder
 
 > **⚡ Core Idea (30 seconds):** `string` in C# is **immutable** — every modification creates a new object on the heap. `StringBuilder` is a **mutable buffer** that builds strings without allocating intermediates. For concatenation inside loops, StringBuilder is the only correct choice.
 
@@ -237,7 +237,7 @@ ReadOnlySpan<char> sub = myString.AsSpan(5, 10); // Zero allocation slice
 
 ---
 
-## 🔗 Connected Topics
+## Connected Topics
 
 - [Value vs Reference Types](./01-value-vs-reference-types.md) — Why string is a reference type but behaves like value type
 - [Span & Memory](../04-advanced/34-span-memory.md) — Zero-allocation string operations

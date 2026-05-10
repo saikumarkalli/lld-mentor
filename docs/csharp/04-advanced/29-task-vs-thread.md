@@ -1,4 +1,4 @@
-# Chapter 29 � Task vs Thread vs ThreadPool
+# Chapter 29 � Task vs Thread vs ThreadPool
 
 > **⚡ Core Idea (30 seconds):** A `Thread` is a raw OS-level execution unit. The `ThreadPool` is a managed pool of reusable threads. A `Task` is a high-level abstraction representing a unit of work that runs on the ThreadPool. You almost never need raw Threads — use Tasks for everything.
 
@@ -229,7 +229,7 @@ Task<int> correct = Task.Run(async () => await GetValueAsync()); // ✅
 
 ---
 
-## 🔗 Connected Topics
+## Connected Topics
 
 - [Async/Await](./27-async-await.md) — `async/await` is built on top of Task
 - [CancellationToken](./28-cancellation-token.md) — Tasks accept tokens for cancellation

@@ -1,4 +1,4 @@
-# Chapter 43 � Task Parallel Library (TPL)
+# Chapter 43 � Task Parallel Library (TPL)
 
 > **⚡ Core Idea (30 seconds):** The TPL is the layer above raw threads — it provides `Task`, `Parallel.For`, `PLINQ`, `Dataflow`, and `Channel<T>` for efficient parallel and concurrent programming. It manages work on the **thread pool** so you don't spin up OS threads manually.
 
@@ -151,7 +151,7 @@ await saver.Completion;
 
 ---
 
-## 5. Follow-up Questions
+## 4. Follow-up Questions
 
 - `Parallel.For` vs `Task.WhenAll` on a batch of tasks — what's the difference?
   *(Parallel.For: thread pool work-stealing partitioner — best for pure CPU work. Task.WhenAll: runs all tasks concurrently — best for I/O tasks that already are async.)*
@@ -164,7 +164,7 @@ await saver.Completion;
 
 ---
 
-## 6. Edge Cases / Common Mistakes
+## 5. Edge Cases / Common Mistakes
 
 ```csharp
 // MISTAKE 1: Using Parallel for I/O-bound work (blocks thread pool threads!)
@@ -187,7 +187,7 @@ Parallel.ForEach(items, new ParallelOptions { CancellationToken = ct }, item => 
 
 ---
 
-## 7. Real-World Usage
+## 6. Real-World Usage
 
 | Scenario | TPL Tool |
 |----------|---------|
@@ -200,7 +200,7 @@ Parallel.ForEach(items, new ParallelOptions { CancellationToken = ct }, item => 
 
 ---
 
-## 8. Depth Levels
+## 7. Depth Levels
 
 | Level | Focus |
 |-------|-------|
@@ -209,7 +209,7 @@ Parallel.ForEach(items, new ParallelOptions { CancellationToken = ct }, item => 
 | **Level 3** | Channel<T>, producer/consumer, backpressure |
 | **Level 4** | TPL Dataflow pipeline topology, work-stealing scheduler internals |
 
-## 🔗 Connected Topics
+## Connected Topics
 - [async/await](../04-advanced/27-async-await.md) — TPL is the foundation for async
 - [GC](./40-garbage-collection.md) — Parallel work increases allocation rate → GC pressure
 - [Deadlocks](../04-advanced/31-deadlocks.md) — Parallel work can deadlock if locking incorrectly

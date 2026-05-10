@@ -1,4 +1,4 @@
-# Chapter 34 � Span<T> & Memory<T>
+# Chapter 34 � Span<T> & Memory<T>
 
 > **⚡ Core Idea (30 seconds):** `Span<T>` is a **stack-only window into contiguous memory** — array, stack memory, or unmanaged memory — without copying. It lets you slice and process data with **zero heap allocations**. `Memory<T>` is the heap-safe version for async scenarios.
 
@@ -226,7 +226,7 @@ Span<int> Dangerous()
 | **Level 3** | ReadOnlySpan, BinaryPrimitives, MemoryPool<T> |
 | **Level 4** | MemoryMarshal, Sequence, custom IBufferWriter<T>, unsafe pinning |
 
-## 🔗 Connected Topics
+## Connected Topics
 - [Value vs Reference Types](../01-beginner/01-value-vs-reference-types.md) — Span is a value type (ref struct)
 - [Garbage Collection](../05-expert/40-garbage-collection.md) — Span avoids heap allocations entirely
 - [Memory Management](./33-memory-management.md) — MemoryPool<T>, IMemoryOwner<T>

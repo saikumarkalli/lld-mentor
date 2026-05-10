@@ -188,7 +188,7 @@ point.X = 5; // ✅ This works — ValueTuple fields are mutable
 
 ---
 
-## 🔗 Connected Topics
+## Connected Topics
 
 - [Value vs Reference Types](../01-beginner/01-value-vs-reference-types.md) — ValueTuple is a value type (stack)
 - [Records](../04-advanced/36-records-structs.md) — Records are the named, immutable alternative to tuples

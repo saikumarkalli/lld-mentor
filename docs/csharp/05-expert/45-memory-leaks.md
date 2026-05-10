@@ -153,7 +153,7 @@ private static readonly ConcurrentDictionary<string, User> _cache = new();
 
 ---
 
-## 🔗 Connected Topics
+## Connected Topics
 
 - [Garbage Collection](./40-garbage-collection.md) — How the GC determines what is reachable via GC Roots
 - [Events](../03-intermediate/20-events.md) — Event handler implementation details

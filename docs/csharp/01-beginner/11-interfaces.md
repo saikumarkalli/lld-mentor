@@ -179,7 +179,7 @@ var s = new Service();
 
 ---
 
-## 🔗 Connected Topics
+## Connected Topics
 
 - [Abstraction](../02-oop/15-abstraction.md) — Abstract classes vs interfaces decision framework
 - [Generics](../03-intermediate/18-generics.md) — Generic interface constraints: `where T : IEntity`

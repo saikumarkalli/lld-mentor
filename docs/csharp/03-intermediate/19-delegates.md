@@ -1,4 +1,4 @@
-# Chapter 19 � Delegates, Func, Action & Predicate
+# Chapter 19 � Delegates, Func, Action & Predicate
 
 > **⚡ Core Idea (30 seconds):** A delegate is a **type-safe function pointer** — it holds a reference to a method just like an object holds references to data. `Func`, `Action`, and `Predicate` are pre-built generic delegate types that cover 95% of use cases without defining your own delegate types.
 
@@ -272,7 +272,7 @@ Func<int, int> triple = static x => x * 3; // No closure class generated
 
 ---
 
-## 🔗 Connected Topics
+## Connected Topics
 
 - [Events](./20-events.md) — Events are delegates with `add`/`remove` access modifiers and publisher-only invocation
 - [LINQ](./21-linq.md) — Entire LINQ is built on `Func<T, bool>`, `Func<T, TResult>` delegates

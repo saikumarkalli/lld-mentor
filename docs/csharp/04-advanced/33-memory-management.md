@@ -1,4 +1,4 @@
-# Chapter 33 � Memory Management & IDisposable
+# Chapter 33 � Memory Management & IDisposable
 
 > **⚡ Core Idea (30 seconds):** The GC handles managed memory automatically, but **unmanaged resources** (file handles, DB connections, sockets, COM objects) must be explicitly released. `IDisposable` is the contract for deterministic cleanup. The `using` statement guarantees `Dispose()` is called even if exceptions occur.
 
@@ -235,7 +235,7 @@ stream.Dispose(); // Disposing twice — should be idempotent but avoid this
 | **Level 3** | IAsyncDisposable, double-dispose safety, SafeHandle |
 | **Level 4** | Finalizer threading, finalization queue, GC generations impact of finalizers |
 
-## 🔗 Connected Topics
+## Connected Topics
 - [Garbage Collection](../05-expert/40-garbage-collection.md) — Finalizers interact with GC generations
 - [Memory Leaks](../05-expert/45-memory-leaks.md) — Not disposing causes resource leaks
 - [async/await](./27-async-await.md) — `IAsyncDisposable` and `await using`

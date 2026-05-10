@@ -143,7 +143,7 @@ decimal total = (decimal?)orderElement.Element("Total") ?? 0m;
 
 ---
 
-## 🔗 Connected Topics
+## Connected Topics
 
 - [JSON Serialization](./48-json-serialization.md) — The modern alternative for APIs
 - [File I/O](./47-file-io.md) — Streaming large XML files using `XmlReader` over `FileStream`

@@ -1,4 +1,4 @@
-# Chapter 22 � Expression Trees
+# Chapter 22 � Expression Trees
 
 > **⚡ Core Idea (30 seconds):** An Expression Tree is **code represented as data**. Instead of compiling a lambda into executable IL, the compiler builds a tree of objects describing the lambda's structure. This allows frameworks like Entity Framework to inspect, translate, and execute your C# code as SQL.
 
@@ -237,7 +237,7 @@ Expression<Func<User, bool>> expr = u => u.Name == name;
 
 ---
 
-## 🔗 Connected Topics
+## Connected Topics
 
 - [LINQ](./21-linq.md) — LINQ operators on `IQueryable<T>` use expression trees internally
 - [Delegates](./19-delegates.md) — `Func<T>` is the compiled form; `Expression<Func<T>>` is the data form

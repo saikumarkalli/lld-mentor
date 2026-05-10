@@ -1,4 +1,4 @@
-# Chapter 18 � Generics & Constraints
+# Chapter 18 � Generics & Constraints
 
 > **⚡ Core Idea (30 seconds):** Generics let you write **type-safe, reusable code without boxing**. Instead of writing a `Stack` for every type, you write `Stack<T>` once and the compiler generates the correct version at compile time. Constraints tell the compiler what `T` is allowed to be.
 
@@ -208,7 +208,7 @@ public static class PerTypeCache<T>
 | **Level 3** | Covariance/Contravariance (out/in), CLR code generation per value type |
 | **Level 4** | Static abstract members in interfaces (C# 11), unmanaged constraint, generic math |
 
-## 🔗 Connected Topics
+## Connected Topics
 - [Collections](../01-beginner/08-collections-overview.md) — All built-in collections are generic
 - [LINQ](./21-linq.md) — `IEnumerable<T>`, `IQueryable<T>` are generic covariant interfaces
 - [Delegates](./19-delegates.md) — `Func<T,TResult>` is a generic delegate

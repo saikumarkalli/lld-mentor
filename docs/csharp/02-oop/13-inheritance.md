@@ -1,4 +1,4 @@
-# Chapter 13 � Inheritance
+# Chapter 13 � Inheritance
 
 > **⚡ Core Idea (30 seconds):** Inheritance lets a class **reuse and extend** the behavior of a parent class. In C#, a class can inherit from only one base class. But inheritance is often overused — when in doubt, prefer **composition over inheritance**.
 
@@ -250,7 +250,7 @@ public class EmailLogger : List<string> { } // ❌ EmailLogger IS NOT a List!
 | **Level 3** | Fragile base class, composition vs inheritance, multiple interface implementation |
 | **Level 4** | Covariant return types (C# 9), devirtualization by JIT via sealed |
 
-## 🔗 Connected Topics
+## Connected Topics
 - [Abstraction](./15-abstraction.md) | [Encapsulation](./12-encapsulation.md) | [Polymorphism](./14-polymorphism.md)
 - [Sealed Classes](./16-sealed-classes.md) — controlling inheritance
 

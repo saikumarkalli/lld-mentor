@@ -159,7 +159,7 @@ animals[0] = new Cat();        // ❌ Runtime ArrayTypeMismatchException!
 
 ---
 
-## 🔗 Connected Topics
+## Connected Topics
 
 - [Generics](../03-intermediate/18-generics.md) — Variance is an advanced generic feature
 - [Delegates](../03-intermediate/19-delegates.md) — `Func<out T>` and `Action<in T>` use variance

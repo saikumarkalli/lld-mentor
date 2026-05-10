@@ -1,4 +1,4 @@
-# Chapter 40 � Garbage Collection (GC) Internals
+# Chapter 40 � Garbage Collection (GC) Internals
 
 > **⚡ Core Idea (30 seconds):** The .NET GC automatically manages heap memory by collecting objects that are no longer reachable. It uses a **generational model** — short-lived objects are collected often and cheaply, long-lived objects are promoted and collected rarely. Understanding GC generations, the LOH, and finalization lets you write code that doesn't cause GC pauses.
 
@@ -267,7 +267,7 @@ GC.Collect(); // ❌ Forces STW pause on Gen 2 — terrible for latency
 
 ---
 
-## 🔗 Connected Topics
+## Connected Topics
 
 - [Memory Management](../04-advanced/33-memory-management.md) — Stack vs heap, IDisposable in practice
 - [Span & Memory](../04-advanced/34-span-memory.md) — Stack allocations that avoid GC entirely

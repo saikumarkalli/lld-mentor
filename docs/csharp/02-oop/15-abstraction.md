@@ -1,4 +1,4 @@
-# Chapter 15 � Abstraction
+# Chapter 15 � Abstraction
 
 > **⚡ Core Idea (30 seconds):** Abstraction means **defining what something does without exposing how it does it**. In C#, you achieve this via `abstract` classes and `interface`s. The calling code depends on the *contract*, not the *implementation* — making your code swappable and testable.
 
@@ -210,7 +210,7 @@ public class OrderService
 | **Level 3** | Default interface methods, interface segregation, explicit implementation |
 | **Level 4** | Covariant return types, static abstract members (C# 11), generic interfaces |
 
-## 🔗 Connected Topics
+## Connected Topics
 - [Encapsulation](./12-encapsulation.md) | [Inheritance](./13-inheritance.md) | [Polymorphism](./14-polymorphism.md)
 - [Delegates](../03-intermediate/19-delegates.md) — Functional abstraction alternative to interfaces
 

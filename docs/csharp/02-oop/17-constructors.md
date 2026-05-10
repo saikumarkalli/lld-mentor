@@ -176,7 +176,7 @@ new Dog(); // Prints "AD" — base constructor runs first!
 
 ---
 
-## 🔗 Connected Topics
+## Connected Topics
 
 - [Types of Constructors](../01-beginner/06-types-of-constructors.md) — Default, static, private constructors
 - [Inheritance](./13-inheritance.md) — `base()` chaining in inheritance hierarchies

@@ -1,4 +1,4 @@
-# Chapter 3 � Nullable Types & Null Safety
+# Chapter 3 � Nullable Types & Null Safety
 
 > **⚡ Core Idea (30 seconds):** Value types can't be null by default — `Nullable<T>` wraps them to add null capability. C# 8 extended this to reference types with nullable annotations (`?`) to eliminate `NullReferenceException` at compile time.
 
@@ -246,7 +246,7 @@ public string Name { get; set; } // Without NRT enabled: implicitly nullable
 
 ---
 
-## 🔗 Connected Topics
+## Connected Topics
 
 - [Value vs Reference Types](./01-value-vs-reference-types.md) — Nullable<T> wraps value types
 - [Pattern Matching](../04-advanced/35-pattern-matching.md) — `if (x is int val)` is the modern null-safe check

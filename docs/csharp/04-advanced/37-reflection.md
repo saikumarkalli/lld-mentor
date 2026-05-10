@@ -1,4 +1,4 @@
-# Chapter 37 � Reflection & Attributes
+# Chapter 37 � Reflection & Attributes
 
 > **⚡ Core Idea (30 seconds):** Reflection lets you **inspect and invoke types, methods, and properties at runtime** — code that reads and manipulates other code. Attributes are metadata annotations you attach to types/members that reflection (and frameworks) can read. Together, they power serializers, ORMs, DI containers, and test frameworks.
 
@@ -242,7 +242,7 @@ var field = type.GetField("_secret", BindingFlags.NonPublic | BindingFlags.Insta
 | **Level 3** | Performance mitigation, compiled expressions, caching PropertyInfo |
 | **Level 4** | Source generators, DynamicallyAccessedMembers, AOT-safe patterns |
 
-## 🔗 Connected Topics
+## Connected Topics
 - [Generics](../03-intermediate/18-generics.md) — Generic reflection: `MakeGenericType()` |
 - Attributes in ASP.NET — Built on reflection
 - [Garbage Collection](../05-expert/40-garbage-collection.md) — Reflection generates IL that avoids GC; source generators do it at compile time

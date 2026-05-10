@@ -1,4 +1,4 @@
-# Chapter 1 � Value Types vs Reference Types
+# Chapter 1 � Value Types vs Reference Types
 
 > **⚡ Core Idea (30 seconds):** Value types live on the **stack** and hold data directly. Reference types live on the **heap** and hold a pointer to data. This distinction drives memory layout, performance, and copying semantics throughout C#.
 
@@ -219,7 +219,7 @@ void Process(in LargeStruct data) { } // Passes by ref, read-only
 
 ---
 
-## 🔗 Connected Topics
+## Connected Topics
 
 - [Nullable Types](./03-nullable-types.md) — `Nullable<T>` wraps value types for null representation
 - [Collections Overview](./08-collections-overview.md) — `List<T>` vs `ArrayList` boxing implications

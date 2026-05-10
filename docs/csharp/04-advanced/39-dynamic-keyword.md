@@ -135,7 +135,7 @@ dynamic list = new List<int> { 1, 2, 3 };
 
 ---
 
-## 🔗 Connected Topics
+## Connected Topics
 
 - [Reflection](./37-reflection.md) — Alternative to dynamic for runtime type discovery
 - [Pattern Matching](./35-pattern-matching.md) — Type patterns (`is string s`) are the safe alternative

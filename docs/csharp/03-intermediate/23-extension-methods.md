@@ -1,4 +1,4 @@
-# Chapter 23 � Extension Methods
+# Chapter 23 � Extension Methods
 
 > **⚡ Core Idea (30 seconds):** Extension methods let you **add methods to existing types without modifying them** — not via inheritance, not via a wrapper. They're syntactic sugar: the compiler turns `myString.IsNullOrEmpty()` into `StringExtensions.IsNullOrEmpty(myString)`. All of LINQ is built this way.
 
@@ -40,7 +40,7 @@ When there's a conflict between a real instance method and an extension method:
 - **Instance method always wins**
 - Extension method is only called if no instance method with that name/signature exists
 
-### Chapter 23 � Extension Methods on Interfaces — The Power Move
+### Chapter 23 � Extension Methods on Interfaces — The Power Move
 
 This is how LINQ works. `Where`, `Select`, `OrderBy` — all extension methods on `IEnumerable<T>`:
 
@@ -207,7 +207,7 @@ public static IEnumerable<T> Where<T>(this IEnumerable<T> src, bool always)
 | **Level 3** | Null handling, precedence over instance methods, namespace resolution |
 | **Level 4** | Extension methods vs default interface methods, generic constraints on extensions |
 
-## 🔗 Connected Topics
+## Connected Topics
 - [LINQ](./21-linq.md) — entirely built on extension methods over `IEnumerable<T>`
 - [Delegates](./19-delegates.md) — LINQ extensions accept `Func<T, bool>` delegates
 - [Generics](./18-generics.md) — most extension methods are generic

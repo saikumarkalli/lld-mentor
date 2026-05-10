@@ -1,4 +1,4 @@
-# Chapter 30 � Synchronization Primitives
+# Chapter 30 � Synchronization Primitives
 
 > **⚡ Core Idea (30 seconds):** When multiple threads access shared mutable state simultaneously, you get **race conditions** — data corruption that produces wrong results silently. Synchronization primitives ensure only one (or a controlled number of) threads can access critical code sections at a time.
 
@@ -276,7 +276,7 @@ finally { _semaphore.Release(); }
 
 ---
 
-## 🔗 Connected Topics
+## Connected Topics
 
 - [Task vs Thread](./29-task-vs-thread.md) — Tasks run on shared ThreadPool → shared state needs synchronization
 - [Deadlocks](./31-deadlocks.md) — Incorrect lock ordering causes deadlocks

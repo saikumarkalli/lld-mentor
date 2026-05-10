@@ -151,7 +151,7 @@ public class Child { public Parent Parent { get; set; } }
 
 ---
 
-## 🔗 Connected Topics
+## Connected Topics
 
 - [File I/O & Streams](./47-file-io.md) — Serializing directly to streams
 - [Span\<T\>](../04-advanced/34-span-memory.md) — The technology powering STJ's performance

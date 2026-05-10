@@ -1,4 +1,4 @@
-# Chapter 6 � Types of Constructors
+# Chapter 6 � Types of Constructors
 
 > **⚡ Core Idea (30 seconds):** A constructor is a special method that runs when an object is created. C# has 5 types: **default**, **parameterised**, **copy**, **static**, and **private**. Each solves a different object-creation scenario. Knowing which to use — and why — is a common interview topic.
 
@@ -354,7 +354,7 @@ public class Cache
 | **Level 3** | Singleton with `Lazy<T>`, Factory Method pattern, copy constructor vs `record with` |
 | **Level 4** | Virtual method in ctor pitfall, static field initialiser order, `TypeInitializationException` |
 
-## 🔗 Connected Topics
+## Connected Topics
 - [Types of Classes](./07-types-of-class.md) — class modifiers affect constructor rules
 - [Encapsulation](../02-oop/12-encapsulation.md) — constructors enforce object invariants
 - [Inheritance](../02-oop/13-inheritance.md) — `base()` constructor chaining

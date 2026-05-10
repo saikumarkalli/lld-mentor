@@ -1,4 +1,4 @@
-# Chapter 24 � Iterators & yield return
+# Chapter 24 � Iterators & yield return
 
 > **⚡ Core Idea (30 seconds):** `yield return` lets you write a method that **produces values one at a time on demand**. Instead of building a full list and returning it, you produce each item lazily — the caller asks for the next item, you compute it, they pull the next, and so on. **This is how all deferred LINQ operators work internally.**
 
@@ -238,7 +238,7 @@ var list = evens.ToList(); // Runs generator AGAIN from start!
 | **Level 3** | State machine generated code, multiple enumeration gotcha, exception timing |
 | **Level 4** | IAsyncEnumerable<T>, CancellationToken with EnumeratorCancellation, Channel<T> |
 
-## 🔗 Connected Topics
+## Connected Topics
 - [LINQ](./21-linq.md) — Deferred LINQ operators use yield internally
 - [async/await](../04-advanced/27-async-await.md) — IAsyncEnumerable + await foreach
 - [Delegates](./19-delegates.md) — Iterator state machines are similar to async state machines
